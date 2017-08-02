@@ -10,5 +10,5 @@ interface IPlayer
 
     public function bet(int $money);
 
-    public function getHand();
+    public function getHand(): \SplObjectStorage;
 }

@@ -20,9 +20,9 @@ class Player implements IPlayer
     protected $money;
 
     /**
-     * @var array of Entity\Card\Card
+     * @var \SplObjectStorage
      */
-    public $hand = [];
+    public $hand;
 
     /**
      * Player constructor.
@@ -69,7 +69,7 @@ class Player implements IPlayer
         $this->money -= $money;
     }
 
-    public function getHand()
+    public function getHand(): \SplObjectStorage
     {
         return $this->hand;
     }
