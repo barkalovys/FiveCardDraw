@@ -5,6 +5,7 @@ namespace Entity\State;
 
 use Entity\Game\IGame;
 use Entity\Player\IPlayer;
+use Service\HandAnalyser\HandAnalyserService;
 
 class PostDrawState implements IState
 {
@@ -20,6 +21,7 @@ class PostDrawState implements IState
     {
         $players = $this->getGame()->getPlayers();
         $players->rewind();
+        $service = new HandAnalyserService();
         while ($players->valid()) {
             /** @var IPlayer $player */
             $player = $players->current();
@@ -27,6 +29,7 @@ class PostDrawState implements IState
             $bet = $player->getMoney() > 15 ? rand(1, $player->getMoney()) : $player->getMoney();
             $player->bet($bet);
             $this->getGame()->pot += $bet;
+            $combination = $service->getCombinationByHand($player->getHand());
             if (!$player->getMoney()) {
                 $players->detach($player);
             }

@@ -12,6 +12,3 @@ $players = new \Entity\Player\PlayerList(5);
 $deck = (new \Service\Deck\StandardDeckBuilder())->build();
 $game = new \Entity\Game\FiveCardDraw\FiveCardDraw($deck, $players);
 $game->play();
-
-$event = new \Event\PlayerEvent();
-var_dump((new \Event\Listener\PlayerEventListener())->handle($event));
