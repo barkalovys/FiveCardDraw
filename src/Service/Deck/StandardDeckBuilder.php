@@ -3,12 +3,9 @@
 namespace Service\Deck;
 
 use Entity\Card\Card;
+use Entity\Card\ICard;
 use Entity\Deck\Deck;
 use Entity\Deck\IDeck;
-use Entity\Rank\IRank;
-use Entity\Suit\ISuit;
-use Service\Rank\RankFactory;
-use Service\Suit\SuitFactory;
 
 /**
  * Class StandardDeckBuilder
@@ -20,29 +17,29 @@ class StandardDeckBuilder implements IDeckBuilder
      * @var array
      */
     private $availableRanks = [
-        IRank::RANK_DEUCE,
-        IRank::RANK_THREE,
-        IRank::RANK_FOUR,
-        IRank::RANK_FIVE,
-        IRank::RANK_SIX,
-        IRank::RANK_SEVEN,
-        IRank::RANK_EIGHT,
-        IRank::RANK_NINE,
-        IRank::RANK_TEN,
-        IRank::RANK_JACK,
-        IRank::RANK_QUEEN,
-        IRank::RANK_KING,
-        IRank::RANK_ACE,
+        ICard::RANK_DEUCE,
+        ICard::RANK_THREE,
+        ICard::RANK_FOUR,
+        ICard::RANK_FIVE,
+        ICard::RANK_SIX,
+        ICard::RANK_SEVEN,
+        ICard::RANK_EIGHT,
+        ICard::RANK_NINE,
+        ICard::RANK_TEN,
+        ICard::RANK_JACK,
+        ICard::RANK_QUEEN,
+        ICard::RANK_KING,
+        ICard::RANK_ACE,
     ];
 
     /**
      * @var array
      */
     private $availableSuits = [
-        ISuit::SUIT_SPADES,
-        ISuit::SUIT_HEARTS,
-        ISuit::SUIT_DIAMONDS,
-        ISuit::SUIT_CLUBS,
+        ICard::SUIT_SPADES,
+        ICard::SUIT_HEARTS,
+        ICard::SUIT_DIAMONDS,
+        ICard::SUIT_CLUBS,
     ];
 
     /**
@@ -51,12 +48,8 @@ class StandardDeckBuilder implements IDeckBuilder
     public function build(): IDeck
     {
         $cards = [];
-        $ranks = $this->getAvailableRanks();
-        $suits = $this->getAvailableSuits();
-        foreach ($ranks as $rankName) {
-            $rank = RankFactory::getRank($rankName);
-            foreach ($suits as $suitName) {
-                $suit = SuitFactory::getSuit($suitName);
+        foreach ($this->getAvailableRanks() as $rank) {
+            foreach ($this->getAvailableSuits() as $suit) {
                 $cards[] = new Card($rank, $suit);
             }
         }

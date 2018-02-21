@@ -2,9 +2,6 @@
 
 namespace Entity\Card;
 
-use Entity\Rank\IRank;
-use Entity\Suit\ISuit;
-
 /**
  * Class Card
  * @package Entity\Card
@@ -13,38 +10,38 @@ class Card implements ICard
 {
 
     /**
-     * @var ISuit
+     * @var string
      */
     private $suit;
 
     /**
-     * @var IRank
+     * @var string
      */
     private $rank;
 
     /**
      * Card constructor.
-     * @param IRank $rank
-     * @param ISuit $suit
+     * @param string $rank
+     * @param string $suit
      */
-    public function __construct(IRank $rank, ISuit $suit)
+    public function __construct(string $rank, string $suit)
     {
         $this->rank = $rank;
         $this->suit = $suit;
     }
 
     /**
-     * @return ISuit
+     * @return string
      */
-    public function getSuit(): ISuit
+    public function getSuit(): string
     {
         return $this->suit;
     }
 
     /**
-     * @return IRank
+     * @return string
      */
-    public function getRank(): IRank
+    public function getRank(): string
     {
         return $this->rank;
     }

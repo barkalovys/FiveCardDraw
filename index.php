@@ -9,7 +9,8 @@ spl_autoload_register(function($className)
 });
 
 $players = new \Entity\Player\PlayerList(5);
-$game = new \Entity\Game\FiveCardDraw\FiveCardDraw(new \Service\Deck\StandardDeckBuilder(), $players);
+$deck = (new \Service\Deck\StandardDeckBuilder())->build();
+$game = new \Entity\Game\FiveCardDraw\FiveCardDraw($deck, $players);
 $game->play();
 
 $event = new \Event\PlayerEvent();

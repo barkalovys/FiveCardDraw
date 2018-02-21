@@ -46,14 +46,14 @@ class FiveCardDraw implements IGame
 
     /**
      * FiveCardDraw constructor.
-     * @param IDeckBuilder $builder
+     * @param IDeck $deck
      * @param IPlayerList $playerList
      */
-    public function __construct(IDeckBuilder $builder, IPlayerList $playerList)
+    public function __construct(IDeck $deck, IPlayerList $playerList)
     {
         $state = new PreDrawState($this);
         $this->state = $state;
-        $this->deck = $builder->build();
+        $this->deck = $deck;
         $this->players = $playerList;
     }
 

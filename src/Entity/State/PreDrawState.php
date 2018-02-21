@@ -12,7 +12,9 @@ use Entity\Player\IPlayer;
  */
 class PreDrawState implements IState
 {
-    /** @var  IGame */
+    /**
+     * @var IGame
+     */
     protected $game;
 
     /**
@@ -23,6 +25,9 @@ class PreDrawState implements IState
         $this->game = $game;
     }
 
+    /**
+     * Give cards to each player
+     */
     public function play()
     {
         for ($i = 0; $i < 5; ++$i) {
@@ -32,7 +37,6 @@ class PreDrawState implements IState
             }
         }
         $this->getGame()->changeState(new TradeState($this->getGame()));
-        var_dump(count($this->getGame()->getDeck()));
     }
 
     /**
