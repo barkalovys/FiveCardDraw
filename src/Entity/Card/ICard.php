@@ -1,6 +1,6 @@
 <?php
 
-namespace Entity\Card;
+namespace FiveCardDraw\Entity\Card;
 
 /**
  * Interface ICard

@@ -1,6 +1,6 @@
 <?php
 
-namespace Event;
+namespace FiveCardDraw\Event;
 
 
 class PlayerEvent extends Event

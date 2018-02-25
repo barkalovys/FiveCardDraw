@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Entity\Player;
+namespace FiveCardDraw\Entity\Player;
 
 
 interface IPlayerList

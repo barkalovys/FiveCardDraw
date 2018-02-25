@@ -1,6 +1,6 @@
 <?php
 
-namespace Event\Listener;
+namespace FiveCardDraw\Event\Listener;
 
 
 use Event\Event;

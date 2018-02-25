@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Event\Listener;
+namespace FiveCardDraw\Event\Listener;
 
-use Event\Event;
-use Event\PlayerEvent;
+use FiveCardDraw\Event\Event;
+use FiveCardDraw\Event\PlayerEvent;
 
 class PlayerEventListener implements IEventListener
 {

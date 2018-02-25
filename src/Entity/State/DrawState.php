@@ -1,9 +1,9 @@
 <?php
 
-namespace Entity\State;
+namespace FiveCardDraw\Entity\State;
 
 
-use Entity\Game\IGame;
+use FiveCardDraw\Entity\Game\IGame;
 
 class DrawState implements IState
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Event\Manager;
+namespace FiveCardDraw\Event\Manager;
 
 
 /**

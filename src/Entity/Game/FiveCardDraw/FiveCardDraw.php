@@ -1,14 +1,14 @@
 <?php
 
-namespace Entity\Game\FiveCardDraw;
+namespace FiveCardDraw\Entity\Game\FiveCardDraw;
 
-use Entity\Deck\IDeck;
-use Entity\Game\IGame;
-use Entity\Player\IPlayer;
-use Entity\Player\IPlayerList;
-use Entity\State\IState;
-use Entity\State\PreDrawState;
-use Service\Deck\IDeckBuilder;
+use FiveCardDraw\Entity\Deck\IDeck;
+use FiveCardDraw\Entity\Game\IGame;
+use FiveCardDraw\Entity\Player\IPlayer;
+use FiveCardDraw\Entity\Player\IPlayerList;
+use FiveCardDraw\Entity\State\IState;
+use FiveCardDraw\Entity\State\PreDrawState;
+use FiveCardDraw\Service\Deck\IDeckBuilder;
 
 /**
  * Class FiveCardDraw

@@ -1,9 +1,9 @@
 <?php
 
-namespace Entity\Deck;
+namespace FiveCardDraw\Entity\Deck;
 
 
-use Entity\Card\ICard;
+use FiveCardDraw\Entity\Card\ICard;
 
 /**
  * Interface IDeck

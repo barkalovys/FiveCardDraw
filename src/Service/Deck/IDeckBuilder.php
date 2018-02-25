@@ -1,8 +1,8 @@
 <?php
 
-namespace Service\Deck;
+namespace FiveCardDraw\Service\Deck;
 
-use Entity\Deck\IDeck;
+use FiveCardDraw\Entity\Deck\IDeck;
 
 interface IDeckBuilder
 {

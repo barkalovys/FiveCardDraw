@@ -1,11 +1,11 @@
 <?php
 
-namespace Entity\Game;
+namespace FiveCardDraw\Entity\Game;
 
 
-use Entity\Deck\IDeck;
-use Entity\Player\IPlayerList;
-use Entity\State\IState;
+use FiveCardDraw\Entity\Deck\IDeck;
+use FiveCardDraw\Entity\Player\IPlayerList;
+use FiveCardDraw\Entity\State\IState;
 
 /**
  * Interface IGame

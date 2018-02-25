@@ -1,8 +1,8 @@
 <?php
 
-namespace Service\HandAnalyser;
+namespace FiveCardDraw\Service\HandAnalyser;
 
-use Entity\Card\ICard;
+use FiveCardDraw\Entity\Card\ICard;
 
 class HandAnalyserService
 {
@@ -38,8 +38,8 @@ class HandAnalyserService
 
         /** @var ICard $highestRankCard */
         $highestRankCard = null;
-        $sameRankCards = new \SplObjectStorage();
-        $sameSuitCards = new \SplObjectStorage();
+        $sameRankCards = [];
+        $sameSuitCards = [];
         /** @var ICard $card */
         foreach ($hand as $card) {
             $sameRankCards[$card->getRank()] = $card;

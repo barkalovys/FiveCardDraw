@@ -1,11 +1,11 @@
 <?php
 
-namespace Service\Deck;
+namespace FiveCardDraw\Service\Deck;
 
-use Entity\Card\Card;
-use Entity\Card\ICard;
-use Entity\Deck\Deck;
-use Entity\Deck\IDeck;
+use FiveCardDraw\Entity\Card\Card;
+use FiveCardDraw\Entity\Card\ICard;
+use FiveCardDraw\Entity\Deck\Deck;
+use FiveCardDraw\Entity\Deck\IDeck;
 
 /**
  * Class StandardDeckBuilder
