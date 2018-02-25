@@ -7,7 +7,7 @@ use FiveCardDraw\Entity\Game\IGame;
 
 class DrawState implements IState
 {
-    /** @var  IGame */
+    /** @var IGame */
     protected $game;
 
     public function __construct(IGame $game)

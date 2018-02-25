@@ -33,7 +33,7 @@ class PreDrawState implements IState
         for ($i = 0; $i < 5; ++$i) {
             /** @var IPlayer $player */
             foreach ($this->getGame()->getPlayers() as $player) {
-                $player->getHand()->attach($this->getGame()->getDeck()->draw());
+                $player->drawCard($this->getGame()->getDeck()->draw());
             }
         }
         $this->getGame()->changeState(new TradeState($this->getGame()));

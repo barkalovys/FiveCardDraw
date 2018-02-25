@@ -16,13 +16,11 @@ use FiveCardDraw\Service\Deck\IDeckBuilder;
  */
 class FiveCardDraw implements IGame
 {
-    /**
-     *
-     */
+
     const MAX_CARDS_IN_HAND = 5;
 
     /**
-     * @var \Entity\Deck\IDeck
+     * @var IDeck
      */
     public $deck;
 
@@ -64,7 +62,7 @@ class FiveCardDraw implements IGame
             $this->state->play();
         }
         $handString = '';
-        foreach ($this->winner->getHand() as $card) {
+        foreach ($this->winner->getCards() as $card) {
             $handString .= $card . ', ';
         }
         echo "Player {$this->winner} wins {$this->pot}$ with hand {$handString}!" . PHP_EOL;

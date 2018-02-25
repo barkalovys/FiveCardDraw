@@ -1,6 +1,8 @@
 <?php
 
 namespace FiveCardDraw\Entity\Player;
+use FiveCardDraw\Entity\Card\ICard;
+use FiveCardDraw\Entity\Hand\IHand;
 
 
 /**
@@ -20,9 +22,14 @@ class Player implements IPlayer
     protected $money;
 
     /**
-     * @var \SplObjectStorage
+     * @var array
      */
-    public $hand;
+    public $cards;
+
+    /**
+     * @var IHand
+     */
+    public $hand = null;
 
     /**
      * Player constructor.
@@ -33,7 +40,7 @@ class Player implements IPlayer
     {
         $this->name = $name;
         $this->money = $money;
-        $this->hand = new \SplObjectStorage();
+        $this->cards = [];
     }
 
     /**
@@ -69,9 +76,26 @@ class Player implements IPlayer
         $this->money -= $money;
     }
 
-    public function getHand(): \SplObjectStorage
+    public function getHand():IHand
     {
         return $this->hand;
+    }
+
+    public function setHand(IHand $hand):IPlayer
+    {
+        $this->hand = $hand;
+        return $this;
+    }
+
+    public function getCards():array
+    {
+        return $this->cards;
+    }
+
+    public function drawCard(ICard $card):IPlayer
+    {
+        $this->cards[] = $card;
+        return $this;
     }
 
     /**
