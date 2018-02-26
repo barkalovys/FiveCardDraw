@@ -2,28 +2,55 @@
 
 namespace FiveCardDraw\Entity\Hand;
 
-use FiveCardDraw\Entity\Card\ICard;
-
+/**
+ * Class FullHouse
+ * @package FiveCardDraw\Entity\Hand
+ */
 class FullHouse implements IHand
 {
 
-    public function __construct(ICard $kicker, string $rank)
-    {
+    /**
+     * @var string
+     */
+    private $threeCardsRank;
 
+    /**
+     * @var string
+     */
+    private $pairRank;
+
+    /**
+     * FullHouse constructor.
+     * @param string $threeCardsRank
+     * @param string $pairRank
+     */
+    public function __construct(string $threeCardsRank, string $pairRank)
+    {
+        $this->threeCardsRank = $threeCardsRank;
+        $this->pairRank = $pairRank;
     }
 
+    /**
+     * @return int
+     */
     public function getStrength(): int
     {
-        // TODO: Implement getStrength() method.
+        return IHand::HAND_FULL_HOUSE;
     }
 
+    /**
+     * @return int
+     */
     public function getName():int
     {
         // TODO: Implement getName() method.
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
-        return '';
+        return "Full house: {$this->threeCardsRank}s over {$this->pairRank}s";
     }
 }

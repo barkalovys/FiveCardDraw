@@ -2,6 +2,10 @@
 
 namespace FiveCardDraw\Entity\Hand;
 
+/**
+ * Class FiveOfAKind
+ * @package FiveCardDraw\Entity\Hand
+ */
 class FiveOfAKind implements IHand
 {
     /**
@@ -18,18 +22,27 @@ class FiveOfAKind implements IHand
         $this->rank = $rank;
     }
 
+    /**
+     * @return int
+     */
     public function getStrength(): int
     {
         return self::HAND_FIVE_OF_A_KIND;
     }
 
+    /**
+     * @return int
+     */
     public function getName():int
     {
         // TODO: Implement getName() method.
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
-        return '';
+        return "Five of a kind: {$this->rank}s!";
     }
 }

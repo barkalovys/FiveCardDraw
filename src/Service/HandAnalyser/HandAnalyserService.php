@@ -57,7 +57,11 @@ class HandAnalyserService
         $consecutiveCardsCount = $info['consecutiveCardsCount'];
         $differentRanksCount = count($sameRankCards);
         $differentSuitsCount = count($sameSuitCards);
-
+        if (isset($sameRankCards[ICard::RANK_JOKER])) {
+            $differentRanksCount--;
+            $differentSuitsCount--;
+            $consecutiveCardsCount++;
+        }
         $handName = '';
         /** @var ICard $highestRankCard */
         $highestRankCard = null;

@@ -14,7 +14,8 @@ interface IHand
     const HAND_FULL_HOUSE = 7;
     const HAND_FOUR_OF_A_KIND = 8;
     const HAND_STRAIGHT_FLUSH = 9;
-    const HAND_FIVE_OF_A_KIND = 10;
+    const HAND_ROYAL_FLUSH = 10;
+    const HAND_FIVE_OF_A_KIND = 11;
 
     public function getStrength():int;
 

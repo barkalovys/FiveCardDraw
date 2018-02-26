@@ -1,35 +1,34 @@
 <?php
 
 namespace FiveCardDraw\Entity\Hand;
-
 use FiveCardDraw\Entity\Card\ICard;
 
 /**
- * Class ThreeOfAKind
+ * Class Flush
  * @package FiveCardDraw\Entity\Hand
  */
-class ThreeOfAKind implements IHand
+class Flush implements IHand
 {
 
     /**
      * @var ICard
      */
-    private $kicker;
+    private $highcard;
 
     /**
      * @var string
      */
-    private $rank;
+    private $suit;
 
     /**
-     * ThreeOfAKind constructor.
-     * @param ICard $kicker
-     * @param string $rank
+     * Flush constructor.
+     * @param ICard $highcard
+     * @param string $suite
      */
-    public function __construct(ICard $kicker, string $rank)
+    public function __construct(ICard $highcard, string $suit)
     {
-        $this->kicker = $kicker;
-        $this->rank = $rank;
+        $this->highcard = $highcard;
+        $this->suit = $suit;
     }
 
     /**
@@ -37,7 +36,7 @@ class ThreeOfAKind implements IHand
      */
     public function getStrength(): int
     {
-        return IHand::HAND_THREE_OF_A_KIND;
+        return IHand::HAND_FLUSH;
     }
 
     /**
@@ -53,6 +52,6 @@ class ThreeOfAKind implements IHand
      */
     public function __toString()
     {
-        return "Three of a kind: {$this->rank}s with {$this->kicker->getRank()} kicker";
+        return "Flush: all {$this->suit} with {$this->highcard->getRank()} highcard";
     }
 }
