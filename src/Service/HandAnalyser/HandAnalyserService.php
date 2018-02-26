@@ -4,6 +4,8 @@ namespace FiveCardDraw\Service\HandAnalyser;
 
 use FiveCardDraw\Entity\Card\ICard;
 use FiveCardDraw\Entity\Game\FiveCardDraw\FiveCardDraw;
+use FiveCardDraw\Entity\Hand\FiveOfAKind;
+use FiveCardDraw\Entity\Hand\FourOfAKind;
 use FiveCardDraw\Entity\Hand\IHand;
 
 class HandAnalyserService
@@ -62,20 +64,52 @@ class HandAnalyserService
             $differentSuitsCount--;
             $consecutiveCardsCount++;
         }
-        $handName = '';
         /** @var ICard $highestRankCard */
         $highestRankCard = null;
         $kicker = null;
         switch ($differentRanksCount) {
-            //Four/Five of a kind or Full house
+            //Five of a kind
+            case 1:
+                $rank = array_pop(
+                            array_keys(
+                                array_filter(
+                                    $sameRankCards,
+                                    function($rank){
+                                        return $rank !== ICard::RANK_JOKER;
+                                    },
+                                    ARRAY_FILTER_USE_KEY
+                                )
+                            )
+                    );
+                if (empty($rank)) {
+                    throw new \Exception('Error during rank calculation');
+                }
+                return new FiveOfAKind($rank);
+            //Four of a kind or Full house
             case 2:
-                /**@var array $cc  */
-                foreach ($sameRankCards as $rank => $cc) {
-                    if (count($cc) === 4) {
-                        $handName = isset($sameRankCards[ICard::RANK_JOKER]) ?
-                            IHand::HAND_FIVE_OF_A_KIND :
-                            IHand::HAND_FOUR_OF_A_KIND;
+                $maxCount = 0;
+                $maxRank = '';
+                foreach($sameRankCards as $rank => $cc) {
+                    $count = count($cc);
+                    if ($count > $maxCount) {
+                        $maxCount = $count;
+                        $maxRank = $rank;
                     }
+
+                    if ($count === 1 && ($rank !== ICard::RANK_JOKER)) {
+                        $kicker = $cc[0];
+                        continue;
+                    }
+                }
+                if (
+                        (
+                            $maxCount === 4 ||
+                            (isset($sameRankCards[ICard::RANK_JOKER]) && ($maxCount === (4 - count($sameRankCards[ICard::RANK_JOKER]))))
+                        )
+                        &&
+                        ($kicker instanceof ICard)
+                ) {
+                    return new FourOfAKind($kicker, $maxRank);
                 }
                 break;
             //Three of a kind or Two pairs
