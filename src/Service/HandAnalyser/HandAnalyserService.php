@@ -4,10 +4,18 @@ namespace FiveCardDraw\Service\HandAnalyser;
 
 use FiveCardDraw\Entity\Card\ICard;
 use FiveCardDraw\Entity\Hand\FiveOfAKind;
+use FiveCardDraw\Entity\Hand\Flush;
 use FiveCardDraw\Entity\Hand\FourOfAKind;
 use FiveCardDraw\Entity\Hand\FullHouse;
 use FiveCardDraw\Entity\Hand\CardsInfo;
+use FiveCardDraw\Entity\Hand\HighCard;
 use FiveCardDraw\Entity\Hand\IHand;
+use FiveCardDraw\Entity\Hand\Pair;
+use FiveCardDraw\Entity\Hand\RoyalFlush;
+use FiveCardDraw\Entity\Hand\Straight;
+use FiveCardDraw\Entity\Hand\StraightFlush;
+use FiveCardDraw\Entity\Hand\ThreeOfAKind;
+use FiveCardDraw\Entity\Hand\TwoPair;
 
 class HandAnalyserService
 {
@@ -48,14 +56,15 @@ class HandAnalyserService
      * @param array $cards
      * @return IHand
      */
-    public function getHandStrength(array $cards)
+    public function getHand(array $cards):IHand
     {
         if (count($cards) !== self::REQUIRED_CARDS_NUMBER) {
             throw new \InvalidArgumentException(
                 "Hand should contain exactly " . self::REQUIRED_CARDS_NUMBER . " cards, " . count($cards) . " given."
             );
         }
-        $info = $this->getInfo($cards);
+        $this->sortCardsByRank($cards);
+        $info = $this->getCardsInfo($cards);
         $sameRankCards = $info->getSameRankCards();
         $sameSuitCards = $info->getSameSuitCards();
         $maxSameRankCount = $info->getMaxSameRankCount();
@@ -65,15 +74,14 @@ class HandAnalyserService
         $consecutiveCardsCount = $info->getConsecutiveCardsCount();
         $differentRanksCount = count($sameRankCards);
         $differentSuitsCount = count($sameSuitCards);
-        if (isset($sameRankCards[ICard::RANK_JOKER])) {
+        /*if (isset($sameRankCards[ICard::RANK_JOKER])) {
             $differentRanksCount = $differentRanksCount - count($sameRankCards[ICard::RANK_JOKER]);
             //TODO: check for joker color
             $differentSuitsCount = $differentSuitsCount - count($sameRankCards[ICard::RANK_JOKER]);
             $consecutiveCardsCount = $consecutiveCardsCount + count($sameRankCards[ICard::RANK_JOKER]);
-        }
+        }*/
         switch ($differentRanksCount) {
             //Five of a kind
-            case 0:
             case 1:
                 $rank = array_pop(
                             array_keys(
@@ -117,24 +125,54 @@ class HandAnalyserService
                 return new FullHouse($threeCardsRank, $pairRank);
             //Three of a kind or Two pairs
             case 3:
-                break;
+                //TODO: need to check for Joker
+                if ($maxSameRankCount === 3) {
+                    //It's a set
+                    return new ThreeOfAKind($sameRankCards[$secondMaxSameRank][0], $maxSameRank);
+                }
+                //It's two pairs
+                //TODO: need to check for Joker
+                $kicker = array_filter(
+                        $sameRankCards,
+                        function($key) use ($maxSameRank, $secondMaxSameRank){
+                            return !in_array($key, [ICard::RANK_JOKER, $maxSameRank, $secondMaxSameRank]);
+                        },
+                        ARRAY_FILTER_USE_KEY
+                )[0];
+                return new TwoPair($kicker, $maxSameRank, $secondMaxSameRank);
             //Pair
+            //TODO: need to check for Joker
             case 4:
-                break;
+                $kicker = null;
+                for ($i = 4; $i > 0; --$i) {
+                    if ($cards[$i]->getRank() !== $maxSameRank) {
+                        $kicker = $cards[$i];
+                        break;
+                    }
+                }
+                return new Pair($kicker, $maxSameRank);
             case 5:
                 //Royal flush or Straight flush or Straight
+                //TODO: need to check for Joker
                 if ($consecutiveCardsCount === 5) {
-                    break;
+                    if ($differentSuitsCount === 1) {
+                        $suit = array_pop(array_keys($sameSuitCards));
+                        if ($cards[count($cards) - 1] === ICard::RANK_ACE) {
+                            return new RoyalFlush($suit);
+                        }
+                        return new StraightFlush($suit, $cards[count($cards) - 1], $cards[0]);
+                    }
+                    return new Straight($cards[count($cards) - 1], $cards[0]);
                 }
                 // Flush
+                //TODO: need to check for Joker
                 elseif ($differentSuitsCount === 1) {
-                    break;
+                    $suit = array_pop(array_keys($sameSuitCards));
+                    return new Flush($cards[count($cards) - 1], $suit);
                 }
-                break;
             // High card
             default:
-                break;
-
+                return new HighCard($cards[count($cards) - 1]);
         }
     }
 
@@ -142,9 +180,8 @@ class HandAnalyserService
      * @param array $cards
      * @return CardsInfo
      */
-    private function getInfo(array $cards):CardsInfo
+    private function getCardsInfo(array $cards):CardsInfo
     {
-        $this->sortCardsByRank($cards);
         $info = new CardsInfo($cards);
         $sameRankCards = [];
         $sameSuitCards = [];
@@ -157,7 +194,7 @@ class HandAnalyserService
         /** @var ICard $card */
         foreach ($cards as $card) {
             $rankStrength = self::RANK_STRENGTH[$card->getRank()];
-            //TODO: check for gutshot (example: 5, 6, 8, 9, 10)
+            //TODO: check for gutshot (example: Joker, 6, 8, 9, 10)
             if (!is_null($previousCard) &&
                 ($rankStrength - self::RANK_STRENGTH[$previousCard->getRank()]) === 1) {
                 $consecutiveCardsCount++;

@@ -29,7 +29,7 @@ class PostDrawState implements IState
             $bet = $player->getMoney() > 15 ? rand(1, $player->getMoney()) : $player->getMoney();
             $player->bet($bet);
             $this->getGame()->pot += $bet;
-            $hand = $service->getHandStrength($player->getCards());
+            $player->setHand($service->getHand($player->getCards()));
             if (!$player->getMoney()) {
                 $players->detach($player);
             }

@@ -65,7 +65,8 @@ class FiveCardDraw implements IGame
         foreach ($this->winner->getCards() as $card) {
             $handString .= $card . ', ';
         }
-        echo "Player {$this->winner} wins {$this->pot}$ with hand {$handString}!" . PHP_EOL;
+        echo "Player {$this->winner} wins {$this->pot}$ with hand {$this->winner->getHand()}!" . PHP_EOL;
+        echo "($handString)" . PHP_EOL;
     }
 
     /**
