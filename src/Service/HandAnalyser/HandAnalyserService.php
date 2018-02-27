@@ -132,13 +132,14 @@ class HandAnalyserService
                 }
                 //It's two pairs
                 //TODO: need to check for Joker
-                $kicker = array_filter(
-                        $sameRankCards,
-                        function($key) use ($maxSameRank, $secondMaxSameRank){
-                            return !in_array($key, [ICard::RANK_JOKER, $maxSameRank, $secondMaxSameRank]);
-                        },
-                        ARRAY_FILTER_USE_KEY
-                )[0];
+                $filtered = array_filter(
+                    $sameRankCards,
+                    function($key) use ($maxSameRank, $secondMaxSameRank){
+                        return !in_array($key, [ICard::RANK_JOKER, $maxSameRank, $secondMaxSameRank]);
+                    },
+                    ARRAY_FILTER_USE_KEY
+                );
+                $kicker = array_pop($filtered)[0];
                 return new TwoPair($kicker, $maxSameRank, $secondMaxSameRank);
             //Pair
             //TODO: need to check for Joker
