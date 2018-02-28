@@ -55,4 +55,22 @@ class Pair implements IHand
     {
         return "Pair of {$this->rank} with {$this->kicker->getRank()} kicker";
     }
+
+    /**
+     * @return ICard
+     */
+    public function getKicker(): ICard
+    {
+        return $this->kicker;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRank(): string
+    {
+        return $this->rank;
+    }
+
+
 }

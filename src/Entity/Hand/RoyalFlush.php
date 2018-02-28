@@ -3,21 +3,26 @@
 namespace FiveCardDraw\Entity\Hand;
 
 
-use FiveCardDraw\Entity\Card\ICard;
-
 /**
  * Class RoyalFlush
  * @package FiveCardDraw\Entity\Hand
  */
-class RoyalFlush extends StraightFlush implements IHand
+class RoyalFlush implements IHand
 {
+
+    /**
+     * @var string
+     */
+    protected $suit;
+
+
     /**
      * RoyalFlush constructor.
      * @param string $suit
      */
     public function __construct(string $suit)
     {
-        parent::__construct($suit, ICard::RANK_ACE, ICard::RANK_TEN);
+        $this->suit = $suit;
     }
 
 

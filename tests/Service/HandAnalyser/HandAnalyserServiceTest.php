@@ -4,9 +4,16 @@ namespace FiveCardDraw\Service\HandAnalyser;
 
 use FiveCardDraw\Entity\Card\Card;
 use FiveCardDraw\Entity\Card\ICard;
+use FiveCardDraw\Entity\Hand\FiveOfAKind;
+use FiveCardDraw\Entity\Hand\Flush;
+use FiveCardDraw\Entity\Hand\FourOfAKind;
+use FiveCardDraw\Entity\Hand\FullHouse;
 use FiveCardDraw\Entity\Hand\HighCard;
 use FiveCardDraw\Entity\Hand\IHand;
 use FiveCardDraw\Entity\Hand\Pair;
+use FiveCardDraw\Entity\Hand\RoyalFlush;
+use FiveCardDraw\Entity\Hand\Straight;
+use FiveCardDraw\Entity\Hand\StraightFlush;
 use FiveCardDraw\Entity\Hand\ThreeOfAKind;
 use FiveCardDraw\Entity\Hand\TwoPair;
 use PHPUnit\Framework\TestCase;
@@ -29,6 +36,8 @@ class HandAnalyserServiceTest extends TestCase
         ];
         $hand = (new HandAnalyserService())->getHand($cards);
         $this->assertInstanceOf(HighCard::class, $hand);
+        /** @var HighCard $hand */
+        $this->assertEquals(ICard::RANK_QUEEN, $hand->getCard()->getRank());
     }
 
     public function testDetectsPairIsCorrect()
@@ -42,6 +51,9 @@ class HandAnalyserServiceTest extends TestCase
         ];
         $hand = (new HandAnalyserService())->getHand($cards);
         $this->assertInstanceOf(Pair::class, $hand);
+        /** @var Pair $hand */
+        $this->assertEquals(ICard::RANK_SIX, $hand->getRank());
+        $this->assertEquals(ICard::RANK_QUEEN, $hand->getKicker()->getRank());
     }
 
     public function testDetectsTwoPairIsCorrect()
@@ -61,7 +73,7 @@ class HandAnalyserServiceTest extends TestCase
     {
         $cards = [
             new Card(ICard::RANK_EIGHT, ICard::SUIT_CLUBS),
-            new Card(ICard::RANK_EIGHT, ICard::SUIT_CLUBS),
+            new Card(ICard::RANK_EIGHT, ICard::SUIT_SPADES),
             new Card(ICard::RANK_NINE, ICard::SUIT_SPADES),
             new Card(ICard::RANK_FOUR, ICard::SUIT_DIAMONDS),
             new Card(ICard::RANK_EIGHT, ICard::SUIT_HEARTS),
@@ -70,5 +82,94 @@ class HandAnalyserServiceTest extends TestCase
         $this->assertInstanceOf(ThreeOfAKind::class, $hand);
     }
 
+    public function testDetectsStraightIsCorrect()
+    {
+        $cards = [
+            new Card(ICard::RANK_SEVEN, ICard::SUIT_CLUBS),
+            new Card(ICard::RANK_EIGHT, ICard::SUIT_HEARTS),
+            new Card(ICard::RANK_NINE, ICard::SUIT_SPADES),
+            new Card(ICard::RANK_JACK, ICard::SUIT_DIAMONDS),
+            new Card(ICard::RANK_TEN, ICard::SUIT_HEARTS),
+        ];
+        $hand = (new HandAnalyserService())->getHand($cards);
+        $this->assertInstanceOf(Straight::class, $hand);
+    }
 
+    public function testDetectsFlushIsCorrect()
+    {
+        $cards = [
+            new Card(ICard::RANK_SEVEN, ICard::SUIT_CLUBS),
+            new Card(ICard::RANK_EIGHT, ICard::SUIT_CLUBS),
+            new Card(ICard::RANK_NINE, ICard::SUIT_CLUBS),
+            new Card(ICard::RANK_KING, ICard::SUIT_CLUBS),
+            new Card(ICard::RANK_TEN, ICard::SUIT_CLUBS),
+        ];
+        $hand = (new HandAnalyserService())->getHand($cards);
+        $this->assertInstanceOf(Flush::class, $hand);
+    }
+
+    public function testDetectsFullHouseIsCorrect()
+    {
+        $cards = [
+            new Card(ICard::RANK_EIGHT, ICard::SUIT_CLUBS),
+            new Card(ICard::RANK_EIGHT, ICard::SUIT_SPADES),
+            new Card(ICard::RANK_FOUR, ICard::SUIT_SPADES),
+            new Card(ICard::RANK_FOUR, ICard::SUIT_DIAMONDS),
+            new Card(ICard::RANK_EIGHT, ICard::SUIT_HEARTS),
+        ];
+        $hand = (new HandAnalyserService())->getHand($cards);
+        $this->assertInstanceOf(FullHouse::class, $hand);
+    }
+
+    public function testDetectsFourOfAKindIsCorrect()
+    {
+        $cards = [
+            new Card(ICard::RANK_DEUCE, ICard::SUIT_CLUBS),
+            new Card(ICard::RANK_DEUCE, ICard::SUIT_SPADES),
+            new Card(ICard::RANK_DEUCE, ICard::SUIT_HEARTS),
+            new Card(ICard::RANK_DEUCE, ICard::SUIT_DIAMONDS),
+            new Card(ICard::RANK_FIVE, ICard::SUIT_HEARTS),
+        ];
+        $hand = (new HandAnalyserService())->getHand($cards);
+        $this->assertInstanceOf(FourOfAKind::class, $hand);
+    }
+
+    public function testDetectsStraightFlushIsCorrect()
+    {
+        $cards = [
+            new Card(ICard::RANK_SEVEN, ICard::SUIT_HEARTS),
+            new Card(ICard::RANK_EIGHT, ICard::SUIT_HEARTS),
+            new Card(ICard::RANK_NINE, ICard::SUIT_HEARTS),
+            new Card(ICard::RANK_JACK, ICard::SUIT_HEARTS),
+            new Card(ICard::RANK_TEN, ICard::SUIT_HEARTS),
+        ];
+        $hand = (new HandAnalyserService())->getHand($cards);
+        $this->assertInstanceOf(StraightFlush::class, $hand);
+    }
+
+    public function testDetectsRoyalFlushIsCorrect()
+    {
+        $cards = [
+            new Card(ICard::RANK_KING, ICard::SUIT_DIAMONDS),
+            new Card(ICard::RANK_JACK, ICard::SUIT_DIAMONDS),
+            new Card(ICard::RANK_TEN, ICard::SUIT_DIAMONDS),
+            new Card(ICard::RANK_ACE, ICard::SUIT_DIAMONDS),
+            new Card(ICard::RANK_QUEEN, ICard::SUIT_DIAMONDS),
+        ];
+        $hand = (new HandAnalyserService())->getHand($cards);
+        $this->assertInstanceOf(RoyalFlush::class, $hand);
+    }
+
+    public function testDetectsFiveOfAKindIsCorrect()
+    {
+        $cards = [
+            new Card(ICard::RANK_KING, ICard::SUIT_HEARTS),
+            new Card(ICard::RANK_KING, ICard::SUIT_SPADES),
+            new Card(ICard::RANK_KING, ICard::SUIT_CLUBS),
+            new Card(ICard::RANK_KING, ICard::SUIT_DIAMONDS),
+            new Card(ICard::RANK_JOKER, ICard::SUIT_DIAMONDS),
+        ];
+        $hand = (new HandAnalyserService())->getHand($cards);
+        $this->assertInstanceOf(FiveOfAKind::class, $hand);
+    }
 }

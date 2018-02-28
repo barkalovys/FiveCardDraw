@@ -48,4 +48,14 @@ class HighCard implements IHand
     {
         return "High card {$this->card->getRank()} of {$this->card->getSuit()}";
     }
+
+    /**
+     * @return ICard
+     */
+    public function getCard(): ICard
+    {
+        return $this->card;
+    }
+
+
 }

@@ -23,6 +23,7 @@ class HandAnalyserService
     const REQUIRED_CARDS_NUMBER = 5;
 
     const RANK_STRENGTH = [
+        ICard::RANK_JOKER   => 0,
         ICard::RANK_DEUCE   => 2,
         ICard::RANK_THREE   => 3,
         ICard::RANK_FOUR    => 4,
@@ -74,17 +75,16 @@ class HandAnalyserService
         $consecutiveCardsCount = $info->getConsecutiveCardsCount();
         $differentRanksCount = count($sameRankCards);
         $differentSuitsCount = count($sameSuitCards);
-        /*if (isset($sameRankCards[ICard::RANK_JOKER])) {
+        if (isset($sameRankCards[ICard::RANK_JOKER])) {
             $differentRanksCount = $differentRanksCount - count($sameRankCards[ICard::RANK_JOKER]);
             //TODO: check for joker color
             $differentSuitsCount = $differentSuitsCount - count($sameRankCards[ICard::RANK_JOKER]);
             $consecutiveCardsCount = $consecutiveCardsCount + count($sameRankCards[ICard::RANK_JOKER]);
-        }*/
+        }
         switch ($differentRanksCount) {
             //Five of a kind
             case 1:
-                $rank = array_pop(
-                            array_keys(
+                $rank = array_keys(
                                 array_filter(
                                     $sameRankCards,
                                     function($rank){
@@ -92,8 +92,7 @@ class HandAnalyserService
                                     },
                                     ARRAY_FILTER_USE_KEY
                                 )
-                            )
-                );
+                )[0];
                 if (empty($rank)) {
                     throw new \Exception('Error during rank calculation');
                 }
@@ -104,9 +103,10 @@ class HandAnalyserService
                     $maxSameRankCount === 4 ||
                     (isset($sameRankCards[ICard::RANK_JOKER]) && ($maxSameRankCount === (4 - count($sameRankCards[ICard::RANK_JOKER]))))
                 ) {
-                    $kicker = array_pop(array_filter($sameRankCards, function($rank) use ($maxSameRank){
+                    $filtered = array_filter($sameRankCards, function($rank) use ($maxSameRank){
                         return ($rank !== ICard::RANK_JOKER) && ($rank !== $maxSameRank);
-                    }, ARRAY_FILTER_USE_KEY));
+                    }, ARRAY_FILTER_USE_KEY);
+                    $kicker = array_pop($filtered)[0];
                     if (!$kicker instanceof ICard) {
                         throw new \UnexpectedValueException("Unexpected type of kicker: ".var_export($kicker, true) . ", ICard expected.");
                     }
@@ -157,8 +157,8 @@ class HandAnalyserService
                 //TODO: need to check for Joker
                 if ($consecutiveCardsCount === 5) {
                     if ($differentSuitsCount === 1) {
-                        $suit = array_pop(array_keys($sameSuitCards));
-                        if ($cards[count($cards) - 1] === ICard::RANK_ACE) {
+                        $suit = array_keys($sameSuitCards)[0];
+                        if ($cards[count($cards) - 1]->getRank() === ICard::RANK_ACE) {
                             return new RoyalFlush($suit);
                         }
                         return new StraightFlush($suit, $cards[count($cards) - 1], $cards[0]);
@@ -168,7 +168,7 @@ class HandAnalyserService
                 // Flush
                 //TODO: need to check for Joker
                 elseif ($differentSuitsCount === 1) {
-                    $suit = array_pop(array_keys($sameSuitCards));
+                    $suit = array_keys($sameSuitCards)[0];
                     return new Flush($cards[count($cards) - 1], $suit);
                 }
             // High card
