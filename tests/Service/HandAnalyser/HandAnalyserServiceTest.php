@@ -25,6 +25,17 @@ use PHPUnit\Framework\TestCase;
 class HandAnalyserServiceTest extends TestCase
 {
 
+    /**
+     * @var HandAnalyserService
+     */
+    private $service;
+
+    public function __construct(string $name = null, array $data = [], string $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+        $this->service = new HandAnalyserService();
+    }
+
     public function testDetectsHighCardIsCorrect()
     {
         $cards = [
@@ -34,7 +45,7 @@ class HandAnalyserServiceTest extends TestCase
             new Card(ICard::RANK_FOUR, ICard::SUIT_DIAMONDS),
             new Card(ICard::RANK_QUEEN, ICard::SUIT_HEARTS),
         ];
-        $hand = (new HandAnalyserService())->getHand($cards);
+        $hand = $this->getService()->getHand($cards);
         $this->assertInstanceOf(HighCard::class, $hand);
         /** @var HighCard $hand */
         $this->assertEquals(ICard::RANK_QUEEN, $hand->getCard()->getRank());
@@ -49,7 +60,7 @@ class HandAnalyserServiceTest extends TestCase
             new Card(ICard::RANK_SIX, ICard::SUIT_DIAMONDS),
             new Card(ICard::RANK_QUEEN, ICard::SUIT_HEARTS),
         ];
-        $hand = (new HandAnalyserService())->getHand($cards);
+        $hand = $this->getService()->getHand($cards);
         $this->assertInstanceOf(Pair::class, $hand);
         /** @var Pair $hand */
         $this->assertEquals(ICard::RANK_SIX, $hand->getRank());
@@ -65,7 +76,7 @@ class HandAnalyserServiceTest extends TestCase
             new Card(ICard::RANK_FOUR, ICard::SUIT_DIAMONDS),
             new Card(ICard::RANK_EIGHT, ICard::SUIT_HEARTS),
         ];
-        $hand = (new HandAnalyserService())->getHand($cards);
+        $hand = $this->getService()->getHand($cards);
         $this->assertInstanceOf(TwoPair::class, $hand);
     }
 
@@ -78,7 +89,7 @@ class HandAnalyserServiceTest extends TestCase
             new Card(ICard::RANK_FOUR, ICard::SUIT_DIAMONDS),
             new Card(ICard::RANK_EIGHT, ICard::SUIT_HEARTS),
         ];
-        $hand = (new HandAnalyserService())->getHand($cards);
+        $hand = $this->getService()->getHand($cards);
         $this->assertInstanceOf(ThreeOfAKind::class, $hand);
     }
 
@@ -91,7 +102,7 @@ class HandAnalyserServiceTest extends TestCase
             new Card(ICard::RANK_JACK, ICard::SUIT_DIAMONDS),
             new Card(ICard::RANK_TEN, ICard::SUIT_HEARTS),
         ];
-        $hand = (new HandAnalyserService())->getHand($cards);
+        $hand = $this->getService()->getHand($cards);
         $this->assertInstanceOf(Straight::class, $hand);
     }
 
@@ -104,7 +115,7 @@ class HandAnalyserServiceTest extends TestCase
             new Card(ICard::RANK_KING, ICard::SUIT_CLUBS),
             new Card(ICard::RANK_TEN, ICard::SUIT_CLUBS),
         ];
-        $hand = (new HandAnalyserService())->getHand($cards);
+        $hand = $this->getService()->getHand($cards);
         $this->assertInstanceOf(Flush::class, $hand);
     }
 
@@ -117,7 +128,7 @@ class HandAnalyserServiceTest extends TestCase
             new Card(ICard::RANK_FOUR, ICard::SUIT_DIAMONDS),
             new Card(ICard::RANK_EIGHT, ICard::SUIT_HEARTS),
         ];
-        $hand = (new HandAnalyserService())->getHand($cards);
+        $hand = $this->getService()->getHand($cards);
         $this->assertInstanceOf(FullHouse::class, $hand);
     }
 
@@ -130,7 +141,7 @@ class HandAnalyserServiceTest extends TestCase
             new Card(ICard::RANK_DEUCE, ICard::SUIT_DIAMONDS),
             new Card(ICard::RANK_FIVE, ICard::SUIT_HEARTS),
         ];
-        $hand = (new HandAnalyserService())->getHand($cards);
+        $hand = $this->getService()->getHand($cards);
         $this->assertInstanceOf(FourOfAKind::class, $hand);
     }
 
@@ -143,7 +154,7 @@ class HandAnalyserServiceTest extends TestCase
             new Card(ICard::RANK_JACK, ICard::SUIT_HEARTS),
             new Card(ICard::RANK_TEN, ICard::SUIT_HEARTS),
         ];
-        $hand = (new HandAnalyserService())->getHand($cards);
+        $hand = $this->getService()->getHand($cards);
         $this->assertInstanceOf(StraightFlush::class, $hand);
     }
 
@@ -156,7 +167,7 @@ class HandAnalyserServiceTest extends TestCase
             new Card(ICard::RANK_ACE, ICard::SUIT_DIAMONDS),
             new Card(ICard::RANK_QUEEN, ICard::SUIT_DIAMONDS),
         ];
-        $hand = (new HandAnalyserService())->getHand($cards);
+        $hand = $this->getService()->getHand($cards);
         $this->assertInstanceOf(RoyalFlush::class, $hand);
     }
 
@@ -169,7 +180,16 @@ class HandAnalyserServiceTest extends TestCase
             new Card(ICard::RANK_KING, ICard::SUIT_DIAMONDS),
             new Card(ICard::RANK_JOKER, ICard::SUIT_DIAMONDS),
         ];
-        $hand = (new HandAnalyserService())->getHand($cards);
+        $hand = $this->getService()->getHand($cards);
         $this->assertInstanceOf(FiveOfAKind::class, $hand);
     }
+
+    /**
+     * @return HandAnalyserService
+     */
+    public function getService(): HandAnalyserService
+    {
+        return $this->service;
+    }
+    
 }
