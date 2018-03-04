@@ -30,11 +30,18 @@ class FiveCardDraw implements IGame
     protected $players;
 
     /**
+     * @var float
+     */
+    protected $pot = 0.0;
+
+    /**
      * @var int
      */
-    public $pot = 0;
+    protected $smallBlindBet = 5;
 
-    /** @var  IState */
+    /**
+     * @var IState
+     */
     protected $state;
 
     /**
@@ -49,8 +56,7 @@ class FiveCardDraw implements IGame
      */
     public function __construct(IDeck $deck, IPlayerList $playerList)
     {
-        $state = new PreDrawState($this);
-        $this->state = $state;
+        $this->state = new PreDrawState($this);;
         $this->deck = $deck;
         $this->players = $playerList;
     }
@@ -65,7 +71,7 @@ class FiveCardDraw implements IGame
         foreach ($this->winner->getCards() as $card) {
             $handString .= $card . ', ';
         }
-        echo "Player {$this->winner} wins {$this->pot}$ with hand {$this->winner->getHand()}!" . PHP_EOL;
+        echo "Player {$this->getWinner()} wins {$this->getPot()}$ with hand {$this->getWinner()->getHand()}!" . PHP_EOL;
         echo "($handString)" . PHP_EOL;
     }
 
@@ -102,6 +108,26 @@ class FiveCardDraw implements IGame
     }
 
     /**
+     * @param float $amount
+     * @return IGame
+     */
+    public function incPot(float $amount): IGame
+    {
+        $this->pot += $amount;
+        return $this;
+    }
+
+    /**
+     * @param float $amount
+     * @return IGame
+     */
+    public function decPot(float $amount): IGame
+    {
+        $this->pot = ($this->pot > $amount) ? $this->pot - $amount : 0;
+        return $this;
+    }
+
+    /**
      * @return IState
      */
     public function getState(): IState
@@ -125,5 +151,12 @@ class FiveCardDraw implements IGame
         $this->winner = $winner;
     }
 
+    /**
+     * @return int
+     */
+    public function getSmallBlindBet(): int
+    {
+        return $this->smallBlindBet;
+    }
 
 }

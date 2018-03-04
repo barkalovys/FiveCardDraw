@@ -9,7 +9,9 @@ use FiveCardDraw\Service\HandAnalyser\HandAnalyserService;
 
 class PostDrawState implements IState
 {
-    /** @var  IGame */
+    /**
+     * @var IGame
+     */
     protected $game;
 
     public function __construct(IGame $game)
@@ -28,8 +30,12 @@ class PostDrawState implements IState
             $players->next();
             $bet = $player->getMoney() > 15 ? rand(1, $player->getMoney()) : $player->getMoney();
             $player->bet($bet);
-            $this->getGame()->pot += $bet;
-            $player->setHand($service->getHand($player->getCards()));
+            $this->getGame()->incPot($bet);
+            $player->setHand(
+                $service->getHand(
+                    $player->getCards()
+                )
+            );
             if (!$player->getMoney()) {
                 $players->detach($player);
             }

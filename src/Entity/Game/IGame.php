@@ -23,7 +23,30 @@ interface IGame
      */
     public function changeState(IState $state);
 
+    /**
+     * @return IPlayerList
+     */
     public function getPlayers(): IPlayerList;
 
+    /**
+     * @return IDeck
+     */
     public function getDeck(): IDeck;
+
+    /**
+     * @return int
+     */
+    public function getSmallBlindBet(): int;
+
+    /**
+     * @param float $amount
+     * @return IGame
+     */
+    public function incPot(float $amount): IGame;
+
+    /**
+     * @param float $amount
+     * @return IGame
+     */
+    public function decPot(float $amount): IGame;
 }

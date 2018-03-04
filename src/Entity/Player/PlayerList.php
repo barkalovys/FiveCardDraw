@@ -8,10 +8,6 @@ namespace FiveCardDraw\Entity\Player;
  */
 class PlayerList extends \SplObjectStorage implements IPlayerList
 {
-    /**
-     * @var array
-     */
-    protected $players = [];
 
     /**
      * PlayerList constructor.
@@ -25,7 +21,7 @@ class PlayerList extends \SplObjectStorage implements IPlayerList
         }
 
         for ($i = 1; $i <= $numPlayers; ++$i) {
-            $this->attach(new Player('Player_' . $i, rand(100, 500)), $i);
+            $this->attach(new Player('Player_' . $i, rand(100, 500), $i-1), $i);
         }
     }
 
