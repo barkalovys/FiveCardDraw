@@ -62,4 +62,14 @@ class TwoPair implements IHand
     {
         return "Two pairs: {$this->rankFirstPair}s and {$this->rankSecondPair}s with {$this->kicker->getRank()} kicker";
     }
+
+    /**
+     * @return ICard
+     */
+    public function getKicker(): ICard
+    {
+        return $this->kicker;
+    }
+
+
 }

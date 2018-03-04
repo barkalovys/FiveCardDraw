@@ -54,4 +54,12 @@ class Flush implements IHand
     {
         return "Flush: all {$this->suit} with {$this->highcard->getRank()} highcard";
     }
+
+    /**
+     * @return ICard
+     */
+    public function getHighcard(): ICard
+    {
+        return $this->highcard;
+    }
 }

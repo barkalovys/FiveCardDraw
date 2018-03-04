@@ -54,4 +54,13 @@ class FourOfAKind implements IHand
     {
         return "Four of a kind: {$this->rank}s with {$this->kicker->getRank()} kicker.";
     }
+
+    /**
+     * @return ICard
+     */
+    public function getKicker(): ICard
+    {
+        return $this->kicker;
+    }
+
 }

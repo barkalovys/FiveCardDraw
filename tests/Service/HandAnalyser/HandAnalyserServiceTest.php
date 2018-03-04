@@ -78,6 +78,7 @@ class HandAnalyserServiceTest extends TestCase
         ];
         $hand = $this->getService()->getHand($cards);
         $this->assertInstanceOf(TwoPair::class, $hand);
+        $this->assertEquals(ICard::RANK_NINE, $hand->getKicker()->getRank());
     }
 
     public function testDetectsThreeOfAKindIsCorrect()
@@ -91,6 +92,7 @@ class HandAnalyserServiceTest extends TestCase
         ];
         $hand = $this->getService()->getHand($cards);
         $this->assertInstanceOf(ThreeOfAKind::class, $hand);
+        $this->assertEquals(ICard::RANK_NINE, $hand->getKicker()->getRank());
     }
 
     public function testDetectsStraightIsCorrect()
@@ -117,6 +119,7 @@ class HandAnalyserServiceTest extends TestCase
         ];
         $hand = $this->getService()->getHand($cards);
         $this->assertInstanceOf(Flush::class, $hand);
+        $this->assertEquals(ICard::RANK_KING, $hand->getHighcard()->getRank());
     }
 
     public function testDetectsFullHouseIsCorrect()
@@ -143,6 +146,7 @@ class HandAnalyserServiceTest extends TestCase
         ];
         $hand = $this->getService()->getHand($cards);
         $this->assertInstanceOf(FourOfAKind::class, $hand);
+        $this->assertEquals(ICard::RANK_FIVE, $hand->getKicker()->getRank());
     }
 
     public function testDetectsStraightFlushIsCorrect()
