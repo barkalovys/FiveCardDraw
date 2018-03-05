@@ -3,7 +3,7 @@
 namespace FiveCardDraw\Event\Listener;
 
 
-use Event\Event;
+use FiveCardDraw\Event\Event;
 
 /**
  * Interface IEventListener

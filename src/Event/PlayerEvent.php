@@ -3,10 +3,30 @@
 namespace FiveCardDraw\Event;
 
 
-class PlayerEvent extends Event
+use FiveCardDraw\Entity\Player\IPlayer;
+
+class PlayerEvent implements IEvent
 {
 
-    public function onBet() {}
+    /**
+     * @var IPlayer
+     */
+    protected $player;
 
-    public function update() {}
+    /**
+     * @param IPlayer $player
+     */
+    public function __construct(IPlayer $player)
+    {
+        $this->player = $player;
+    }
+
+    /**
+     * @return IPlayer
+     */
+    public function getPlayer(): IPlayer
+    {
+        return $this->player;
+    }
+
 }
