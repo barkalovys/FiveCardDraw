@@ -28,7 +28,7 @@ class Player implements IPlayer
     /**
      * @var int
      */
-    protected $status;
+    protected $tradeStatus;
 
     /**
      * @var int
@@ -160,21 +160,21 @@ class Player implements IPlayer
     /**
      * @return int
      */
-    public function getStatus(): int
+    public function getTradeStatus(): int
     {
-        return $this->status;
+        return $this->tradeStatus;
     }
 
     /**
      * @param int $status
      * @return IPlayer
      */
-    public function setStatus(int $status): IPlayer
+    public function setTradeStatus(int $status): IPlayer
     {
         if (!in_array($status, self::PLAYER_STATUS_LIST)) {
             throw new \InvalidArgumentException('Attempt to set non-existent player status ' . $status);
         }
-        $this->status = $status;
+        $this->tradeStatus = $status;
         return $this;
     }
 

@@ -56,7 +56,7 @@ class FiveCardDraw implements IGame
      */
     public function __construct(IDeck $deck, IPlayerList $playerList)
     {
-        $this->state = new PreDrawState($this);;
+        $this->state = new PreDrawState($this);
         $this->deck = $deck;
         $this->players = $playerList;
     }
@@ -159,4 +159,19 @@ class FiveCardDraw implements IGame
         return $this->smallBlindBet;
     }
 
+    protected function onPlayerBet(float $amount)
+    {
+        $this->incPot($amount);
+        /** @var IPlayer $player */
+        foreach ($this->players as $player) {
+            if ($player->getCurrentBet() < $amount) {
+                $player->setTradeStatus(IPlayer::TRADE_STATUS_WAITING);
+            }
+        }
+    }
+
+    protected function onPlayerWinPot()
+    {
+        $this->pot = 0.0;
+    }
 }

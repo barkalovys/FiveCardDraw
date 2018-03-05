@@ -68,13 +68,13 @@ interface IPlayer
     /**
      * @return int
      */
-    public function getStatus(): int;
+    public function getTradeStatus(): int;
 
     /**
      * @param int $status
      * @return IPlayer
      */
-    public function setStatus(int $status): IPlayer;
+    public function setTradeStatus(int $status): IPlayer;
 
     /**
      * @return int
