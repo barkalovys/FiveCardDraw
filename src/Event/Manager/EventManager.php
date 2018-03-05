@@ -36,7 +36,7 @@ class EventManager implements IEventManager
         /** @var IEventListener $listener */
         foreach ($this->listeners as $listener) {
             if (!method_exists($listener, $method)) {
-                throw new \Exception('Class ' . $listener::class . 'need to implement method ' . $method);
+                throw new \Exception('Class ' . get_class($listener) . ' need to implement method ' . $method);
             }
             call_user_func([$listener, $method], $event);
         }

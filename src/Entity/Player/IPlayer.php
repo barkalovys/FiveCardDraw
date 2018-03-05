@@ -4,6 +4,8 @@ namespace FiveCardDraw\Entity\Player;
 
 use FiveCardDraw\Entity\Card\ICard;
 use FiveCardDraw\Entity\Hand\IHand;
+use FiveCardDraw\Event\Manager\EventManager;
+use FiveCardDraw\Event\Manager\IEventManager;
 
 /**
  * Interface IPlayer
@@ -86,4 +88,15 @@ interface IPlayer
      * @return IPlayer
      */
     public function setPosition(int $position): IPlayer;
+
+    /**
+     * @return IEventManager
+     */
+    public function getEventManager(): IEventManager;
+
+    /**
+     * @param EventManager $eventManager
+     * @return IPlayer
+     */
+    public function setEventManager(EventManager $eventManager): IPlayer;
 }

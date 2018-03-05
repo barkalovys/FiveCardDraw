@@ -8,13 +8,17 @@ use FiveCardDraw\Entity\Player\IPlayer;
 use FiveCardDraw\Entity\Player\IPlayerList;
 use FiveCardDraw\Entity\State\IState;
 use FiveCardDraw\Entity\State\PreDrawState;
+use FiveCardDraw\Event\Listener\IEventListener;
+use FiveCardDraw\Event\Manager\EventManager;
+use FiveCardDraw\Event\Manager\IEventManager;
+use FiveCardDraw\Event\PlayerEvent;
 use FiveCardDraw\Service\Deck\IDeckBuilder;
 
 /**
  * Class FiveCardDraw
  * @package Entity\Game\FiveCardDraw
  */
-class FiveCardDraw implements IGame
+class FiveCardDraw implements IGame, IEventListener
 {
 
     const MAX_CARDS_IN_HAND = 5;
@@ -50,6 +54,11 @@ class FiveCardDraw implements IGame
     protected $winner;
 
     /**
+     * @var IEventManager
+     */
+    protected $eventManager;
+
+    /**
      * FiveCardDraw constructor.
      * @param IDeck $deck
      * @param IPlayerList $playerList
@@ -59,6 +68,8 @@ class FiveCardDraw implements IGame
         $this->state = new PreDrawState($this);
         $this->deck = $deck;
         $this->players = $playerList;
+        $this->eventManager = new EventManager();
+        $this->initEventManager();
     }
 
 
@@ -73,6 +84,15 @@ class FiveCardDraw implements IGame
         }
         echo "Player {$this->getWinner()} wins {$this->getPot()}$ with hand {$this->getWinner()->getHand()}!" . PHP_EOL;
         echo "($handString)" . PHP_EOL;
+    }
+
+    protected function initEventManager()
+    {
+        $this->eventManager->registerListener($this);
+        /** @var IPlayer $player */
+        foreach ($this->players as $player) {
+            $player->setEventManager($this->eventManager);
+        }
     }
 
     /**
@@ -159,8 +179,9 @@ class FiveCardDraw implements IGame
         return $this->smallBlindBet;
     }
 
-    protected function onPlayerBet(float $amount)
+    public function onPlayerBet(PlayerEvent $event)
     {
+        $amount = $event->getPlayer()->getCurrentBet();
         $this->incPot($amount);
         /** @var IPlayer $player */
         foreach ($this->players as $player) {
@@ -170,7 +191,7 @@ class FiveCardDraw implements IGame
         }
     }
 
-    protected function onPlayerWinPot()
+    public function onPlayerWinPot()
     {
         $this->pot = 0.0;
     }

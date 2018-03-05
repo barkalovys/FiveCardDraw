@@ -3,6 +3,9 @@
 namespace FiveCardDraw\Entity\Player;
 use FiveCardDraw\Entity\Card\ICard;
 use FiveCardDraw\Entity\Hand\IHand;
+use FiveCardDraw\Event\Manager\EventManager;
+use FiveCardDraw\Event\Manager\IEventManager;
+use FiveCardDraw\Event\PlayerEvent;
 
 
 /**
@@ -38,7 +41,7 @@ class Player implements IPlayer
     /**
      * @var float
      */
-    protected $currentBet;
+    protected $currentBet = 0.0;
 
     /**
      * @var float
@@ -54,6 +57,11 @@ class Player implements IPlayer
      * @var IHand
      */
     public $hand = null;
+
+    /**
+     * @var IEventManager
+     */
+    protected $eventManager;
 
     /**
      * Player constructor.
@@ -102,6 +110,7 @@ class Player implements IPlayer
 
         $this->money -= $amount;
         $this->currentBet += $amount;
+        $this->eventManager->notify('playerBet', new PlayerEvent($this));
     }
 
     /**
@@ -193,6 +202,24 @@ class Player implements IPlayer
     public function setPosition(int $position): IPlayer
     {
         $this->position = $position;
+        return $this;
+    }
+
+    /**
+     * @return IEventManager
+     */
+    public function getEventManager(): IEventManager
+    {
+        return $this->eventManager;
+    }
+
+    /**
+     * @param EventManager $eventManager
+     * @return IPlayer
+     */
+    public function setEventManager(EventManager $eventManager): IPlayer
+    {
+        $this->eventManager = $eventManager;
         return $this;
     }
 

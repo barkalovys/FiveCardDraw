@@ -11,8 +11,5 @@ use FiveCardDraw\Event\Event;
  */
 interface IEventListener
 {
-    /**
-     * @param Event $event
-     */
-    public function handle(Event $event);
+
 }
