@@ -12,6 +12,7 @@ use FiveCardDraw\Event\Listener\IEventListener;
 use FiveCardDraw\Event\Manager\EventManager;
 use FiveCardDraw\Event\Manager\IEventManager;
 use FiveCardDraw\Event\PlayerBetEvent;
+use FiveCardDraw\Event\PlayerWinGameEvent;
 use FiveCardDraw\Event\PlayerWinPotEvent;
 use FiveCardDraw\Service\Deck\IDeckBuilder;
 use FiveCardDraw\Service\Logger\GameLogger;
@@ -87,12 +88,6 @@ class FiveCardDraw implements IGame, IEventListener
         while (!$this->winner) {
             $this->state->play();
         }
-        $handString = '';
-        foreach ($this->winner->getCards() as $card) {
-            $handString .= $card . ', ';
-        }
-        echo "Player {$this->getWinner()} wins {$this->getPot()}$ with hand {$this->getWinner()->getHand()}!" . PHP_EOL;
-        echo "($handString)" . PHP_EOL;
     }
 
     protected function initEventManager()
@@ -193,6 +188,7 @@ class FiveCardDraw implements IGame, IEventListener
     public function setWinner(IPlayer $winner)
     {
         $this->winner = $winner;
+        $this->getEventManager()->notify('playerWinGame', new PlayerWinGameEvent($winner));
     }
 
     /**

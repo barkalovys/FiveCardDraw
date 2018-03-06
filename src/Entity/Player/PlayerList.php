@@ -42,6 +42,7 @@ class PlayerList implements IPlayerList, IEventListener
                 $this->detach($player);
             }
         }
+        $this->refreshPositions();
     }
 
     /**
@@ -50,7 +51,6 @@ class PlayerList implements IPlayerList, IEventListener
     public function attach(IPlayer $player)
     {
         $this->players[$player->getId()] = $player;
-        $this->refreshPositions();
     }
 
     /**
@@ -59,7 +59,6 @@ class PlayerList implements IPlayerList, IEventListener
     public function detach(IPlayer $player)
     {
         unset($this->players[$player->getId()]);
-        $this->refreshPositions();
     }
 
     /**
@@ -85,11 +84,6 @@ class PlayerList implements IPlayerList, IEventListener
             $player->setPosition($i);
             ++$i;
         }
-    }
-
-    private function sortByPosition()
-    {
-
     }
 
     /**
