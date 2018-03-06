@@ -123,9 +123,9 @@ class FiveCardDraw implements IGame, IEventListener
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getPot(): int
+    public function getPot(): float
     {
         return $this->pot;
     }
@@ -182,13 +182,26 @@ class FiveCardDraw implements IGame, IEventListener
         return $this->smallBlindBet;
     }
 
+    /**
+     * @param PlayerEvent $event
+     */
     public function onPlayerBet(PlayerEvent $event)
     {
         $this->incPot($event->getPlayer()->getCurrentBet());
     }
 
-    public function onPlayerWinPot()
+    public function onPlayerWinPot(PlayerEvent $event)
     {
         $this->pot = 0.0;
     }
+
+    /**
+     * @return IEventManager
+     */
+    public function getEventManager(): IEventManager
+    {
+        return $this->eventManager;
+    }
+
+
 }

@@ -100,6 +100,7 @@ class Player implements IPlayer, IEventListener
             $amount = $this->getMoney();
         }
 
+        $this->setTradeStatus(IPlayer::TRADE_STATUS_BETTING);
         $this->money -= $amount;
         $this->currentBet += $amount;
         $this->eventManager->notify('playerBet', new PlayerEvent($this));
@@ -118,6 +119,15 @@ class Player implements IPlayer, IEventListener
         ) {
             $this->setTradeStatus(IPlayer::TRADE_STATUS_WAITING);
         }
+    }
+
+    /**
+     * @param PlayerEvent $event
+     */
+    public function onPlayerWinPot(PlayerEvent $event)
+    {
+        $this->currentBet = 0.0;
+        $this->setTradeStatus(IPlayer::TRADE_STATUS_WAITING);
     }
 
     /**
@@ -142,6 +152,16 @@ class Player implements IPlayer, IEventListener
     public function getMoney(): float
     {
         return $this->money;
+    }
+
+    /**
+     * @param int $amount
+     * @return IPlayer
+     */
+    public function incMoney(int $amount): IPlayer
+    {
+        $this->money += $amount;
+        return $this;
     }
 
     /**

@@ -6,6 +6,7 @@ namespace FiveCardDraw\Entity\Game;
 use FiveCardDraw\Entity\Deck\IDeck;
 use FiveCardDraw\Entity\Player\IPlayerList;
 use FiveCardDraw\Entity\State\IState;
+use FiveCardDraw\Event\Manager\IEventManager;
 
 /**
  * Interface IGame
@@ -39,6 +40,11 @@ interface IGame
     public function getSmallBlindBet(): int;
 
     /**
+     * @return float
+     */
+    public function getPot(): float;
+
+    /**
      * @param float $amount
      * @return IGame
      */
@@ -49,4 +55,9 @@ interface IGame
      * @return IGame
      */
     public function decPot(float $amount): IGame;
+
+    /**
+     * @return IEventManager
+     */
+    public function getEventManager(): IEventManager;
 }

@@ -16,6 +16,8 @@ use FiveCardDraw\Entity\Hand\Straight;
 use FiveCardDraw\Entity\Hand\StraightFlush;
 use FiveCardDraw\Entity\Hand\ThreeOfAKind;
 use FiveCardDraw\Entity\Hand\TwoPair;
+use FiveCardDraw\Entity\Player\IPlayer;
+use FiveCardDraw\Entity\Player\IPlayerList;
 
 class HandAnalyserService
 {
@@ -175,6 +177,29 @@ class HandAnalyserService
             default:
                 return new HighCard($cards[count($cards) - 1]);
         }
+    }
+
+    /**
+     * @param IPlayerList $playerList
+     */
+    public function getPlayersWithStrongestHand(IPlayerList $playerList)
+    {
+        /** @var IPlayer $winner */
+        $winner = null;
+        /** @var IPlayer $player */
+        foreach ($playerList->getPlayers() as $player) {
+            if ($player->getTradeStatus() === IPlayer::TRADE_STATUS_FOLD) {
+                continue;
+            }
+            if (is_null($winner) || $player->getHand()->getStrength() > $winner->getHand()->getStrength()) {
+                $winner = $player;
+                continue;
+            }
+            if ($player->getHand()->getStrength() === $winner->getHand()->getStrength()) {
+
+            }
+        }
+        return $winner;
     }
 
     /**

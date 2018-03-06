@@ -50,4 +50,12 @@ class EventManager implements IEventManager
         $this->listeners->attach($listener);
     }
 
+    /**
+     * @param IEventListener $listener
+     */
+    public function detachListener(IEventListener $listener)
+    {
+        $this->listeners->detach($listener);
+    }
+
 }
