@@ -26,7 +26,7 @@ interface IGame
     /**
      * @return IPlayerList
      */
-    public function getPlayers(): IPlayerList;
+    public function getPlayerList(): IPlayerList;
 
     /**
      * @return IDeck

@@ -6,8 +6,13 @@ namespace FiveCardDraw\Entity\Player;
  * Class PlayerList
  * @package Entity\Player
  */
-class PlayerList extends \SplObjectStorage implements IPlayerList
+class PlayerList implements IPlayerList
 {
+
+    /**
+     * @var array
+     */
+    protected $players = [];
 
     /**
      * PlayerList constructor.
@@ -27,14 +32,42 @@ class PlayerList extends \SplObjectStorage implements IPlayerList
 
     /**
      * @param IPlayer $player
-     * @param int $priority
-     * @throws \Exception
      */
-    public function attach($player, $priority = null)
+    public function attach(IPlayer $player)
     {
-        if (!$player instanceof IPlayer) {
-            throw new \Exception('Player must be type of Entity\Player\IPlayer');
-        }
-        parent::attach($player, $priority);
+        $this->players[$player->getId()] = $player;
     }
+
+    /**
+     * @param IPlayer $player
+     */
+    public function detach(IPlayer $player)
+    {
+        unset($this->players[$player->getId()]);
+    }
+
+    /**
+     * @param int $pos
+     * @return IPlayer|null
+     */
+    public function getByPosition(int $pos): IPlayer
+    {
+        /** @var IPlayer $player */
+        foreach ($this->players as $player) {
+            if ($player->getPosition() === $pos) {
+                return $player;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPlayers(): array
+    {
+        return $this->players;
+    }
+
+
 }

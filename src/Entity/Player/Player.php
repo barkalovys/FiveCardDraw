@@ -3,6 +3,7 @@
 namespace FiveCardDraw\Entity\Player;
 use FiveCardDraw\Entity\Card\ICard;
 use FiveCardDraw\Entity\Hand\IHand;
+use FiveCardDraw\Event\Listener\IEventListener;
 use FiveCardDraw\Event\Manager\EventManager;
 use FiveCardDraw\Event\Manager\IEventManager;
 use FiveCardDraw\Event\PlayerEvent;
@@ -12,7 +13,7 @@ use FiveCardDraw\Event\PlayerEvent;
  * Class Player
  * @package Entity\Player
  */
-class Player implements IPlayer
+class Player implements IPlayer, IEventListener
 {
 
     const PLAYER_STATUS_LIST = [
@@ -22,6 +23,12 @@ class Player implements IPlayer
         self::TRADE_STATUS_FOLD,
         self::TRADE_STATUS_WAITING,
     ];
+
+
+    /**
+     * @var string
+     */
+    protected $id;
 
     /**
      * @var string
@@ -71,27 +78,12 @@ class Player implements IPlayer
      */
     public function __construct(string $name, float $money, int $position)
     {
+        $this->id = uniqid();
         $this->name = $name;
         $this->money = $money;
         $this->cards = [];
-        $this->status = self::TRADE_STATUS_INITIAL;
+        $this->tradeStatus = self::TRADE_STATUS_INITIAL;
         $this->position = $position;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return float
-     */
-    public function getMoney(): float
-    {
-        return $this->money;
     }
 
     /**
@@ -111,6 +103,45 @@ class Player implements IPlayer
         $this->money -= $amount;
         $this->currentBet += $amount;
         $this->eventManager->notify('playerBet', new PlayerEvent($this));
+    }
+
+    /**
+     * @param PlayerEvent $event
+     */
+    public function onPlayerBet(PlayerEvent $event)
+    {
+        $player = $event->getPlayer();
+        if (
+            $this !== $player &&
+            $this->getTradeStatus() !== IPlayer::TRADE_STATUS_FOLD &&
+            $this->getCurrentBet() < $player->getCurrentBet()
+        ) {
+            $this->setTradeStatus(IPlayer::TRADE_STATUS_WAITING);
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return float
+     */
+    public function getMoney(): float
+    {
+        return $this->money;
     }
 
     /**

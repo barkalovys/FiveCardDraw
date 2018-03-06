@@ -31,7 +31,7 @@ class FiveCardDraw implements IGame, IEventListener
     /**
      * @var IPlayerList
      */
-    protected $players;
+    protected $playerList;
 
     /**
      * @var float
@@ -67,7 +67,7 @@ class FiveCardDraw implements IGame, IEventListener
     {
         $this->state = new PreDrawState($this);
         $this->deck = $deck;
-        $this->players = $playerList;
+        $this->playerList = $playerList;
         $this->eventManager = new EventManager();
         $this->initEventManager();
     }
@@ -88,10 +88,13 @@ class FiveCardDraw implements IGame, IEventListener
 
     protected function initEventManager()
     {
-        $this->eventManager->registerListener($this);
+        /** @var EventManager $eventManager */
+        $eventManager = $this->eventManager;
+        $eventManager->registerListener($this);
         /** @var IPlayer $player */
-        foreach ($this->players as $player) {
-            $player->setEventManager($this->eventManager);
+        foreach ($this->playerList->getPlayers() as $player) {
+            $player->setEventManager($eventManager);
+            $eventManager->registerListener($player);
         }
     }
 
@@ -106,9 +109,9 @@ class FiveCardDraw implements IGame, IEventListener
     /**
      * @return IPlayerList
      */
-    public function getPlayers(): IPlayerList
+    public function getPlayerList(): IPlayerList
     {
-        return $this->players;
+        return $this->playerList;
     }
 
     /**
@@ -181,14 +184,7 @@ class FiveCardDraw implements IGame, IEventListener
 
     public function onPlayerBet(PlayerEvent $event)
     {
-        $amount = $event->getPlayer()->getCurrentBet();
-        $this->incPot($amount);
-        /** @var IPlayer $player */
-        foreach ($this->players as $player) {
-            if ($player->getCurrentBet() < $amount) {
-                $player->setTradeStatus(IPlayer::TRADE_STATUS_WAITING);
-            }
-        }
+        $this->incPot($event->getPlayer()->getCurrentBet());
     }
 
     public function onPlayerWinPot()

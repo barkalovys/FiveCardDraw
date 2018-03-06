@@ -5,6 +5,7 @@ namespace FiveCardDraw\Entity\State;
 
 use FiveCardDraw\Entity\Game\IGame;
 use FiveCardDraw\Entity\Player\IPlayer;
+use FiveCardDraw\Entity\Player\IPlayerList;
 use FiveCardDraw\Service\HandAnalyser\HandAnalyserService;
 
 class PostDrawState implements IState
@@ -21,13 +22,11 @@ class PostDrawState implements IState
 
     public function play()
     {
-        $players = $this->getGame()->getPlayers();
-        $players->rewind();
+        /** @var IPlayerList $playerList */
+        $playerList = $this->getGame()->getPlayerList();
         $service = new HandAnalyserService();
-        while ($players->valid()) {
-            /** @var IPlayer $player */
-            $player = $players->current();
-            $players->next();
+        /** @var IPlayer $player */
+        foreach ($playerList->getPlayers() as $player) {
             $bet = $player->getMoney() > 15 ? rand(1, $player->getMoney()) : $player->getMoney();
             $player->bet($bet);
             $this->getGame()->incPot($bet);
@@ -37,10 +36,10 @@ class PostDrawState implements IState
                 )
             );
             if (!$player->getMoney()) {
-                $players->detach($player);
+                $playerList->detach($player);
             }
-            if (count($players) <= 1) {
-                $this->getGame()->setWinner($players->current());
+            if (count($playerList->getPlayers()) <= 1) {
+                $this->getGame()->setWinner($player);
                 break;
             }
         }

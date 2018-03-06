@@ -30,26 +30,17 @@ class PreDrawState implements IState
      */
     public function play()
     {
+        $game = $this->getGame();
+        $playerList = $game->getPlayerList();
         for ($i = 0; $i < 5; ++$i) {
             /** @var IPlayer $player */
-            foreach ($this->getGame()->getPlayers() as $player) {
-                if ($i === 0){
-                    if ($player->getPosition() === 0) {
-                        $player
-                            ->setTradeStatus(IPlayer::TRADE_STATUS_WAITING)
-                            ->bet($this->getGame()->getSmallBlindBet());
-                    } elseif ($player->getPosition() === 1) {
-                        $player
-                            ->setTradeStatus(IPlayer::TRADE_STATUS_BETTING)
-                            ->bet(2 * $this->getGame()->getSmallBlindBet());
-                    } else {
-                        $player->setTradeStatus(IPlayer::TRADE_STATUS_WAITING);
-                    }
-                }
-                $player->addCard($this->getGame()->getDeck()->draw());
+            foreach ($playerList->getPlayers() as $player) {
+                $player->addCard($game->getDeck()->draw());
             }
         }
-        $this->getGame()->changeState(new TradeState($this->getGame()));
+        $playerList->getByPosition(0)->bet($game->getSmallBlindBet());
+        $playerList->getByPosition(1)->bet(2 * $game->getSmallBlindBet());
+        $game->changeState(new TradeState($game));
     }
 
     /**
