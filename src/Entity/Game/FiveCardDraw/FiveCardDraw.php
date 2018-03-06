@@ -92,8 +92,7 @@ class FiveCardDraw implements IGame, IEventListener
 
     protected function initEventManager()
     {
-        /** @var EventManager $eventManager */
-        $eventManager = $this->eventManager;
+        $eventManager = $this->getEventManager();
         $eventManager->registerListener($this);
         $eventManager->registerListener($this->logger);
         /** @var IPlayer $player */

@@ -106,8 +106,8 @@ interface IPlayer
     public function getEventManager(): IEventManager;
 
     /**
-     * @param EventManager $eventManager
+     * @param IEventManager $eventManager
      * @return IPlayer
      */
-    public function setEventManager(EventManager $eventManager): IPlayer;
+    public function setEventManager(IEventManager $eventManager): IPlayer;
 }

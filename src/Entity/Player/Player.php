@@ -104,7 +104,7 @@ class Player implements IPlayer, IEventListener
         $this->setTradeStatus(IPlayer::TRADE_STATUS_BETTING);
         $this->money -= $amount;
         $this->currentBet += $amount;
-        $this->eventManager->notify('playerBet', new PlayerBetEvent($this, $amount));
+        $this->getEventManager()->notify('playerBet', new PlayerBetEvent($this, $amount));
     }
 
     /**
@@ -278,10 +278,10 @@ class Player implements IPlayer, IEventListener
     }
 
     /**
-     * @param EventManager $eventManager
+     * @param IEventManager $eventManager
      * @return IPlayer
      */
-    public function setEventManager(EventManager $eventManager): IPlayer
+    public function setEventManager(IEventManager $eventManager): IPlayer
     {
         $this->eventManager = $eventManager;
         return $this;
