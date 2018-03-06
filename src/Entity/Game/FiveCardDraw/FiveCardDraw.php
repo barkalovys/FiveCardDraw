@@ -11,8 +11,11 @@ use FiveCardDraw\Entity\State\PreDrawState;
 use FiveCardDraw\Event\Listener\IEventListener;
 use FiveCardDraw\Event\Manager\EventManager;
 use FiveCardDraw\Event\Manager\IEventManager;
-use FiveCardDraw\Event\PlayerEvent;
+use FiveCardDraw\Event\PlayerBetEvent;
+use FiveCardDraw\Event\PlayerWinPotEvent;
 use FiveCardDraw\Service\Deck\IDeckBuilder;
+use FiveCardDraw\Service\Logger\GameLogger;
+use FiveCardDraw\Service\Logger\ILogger;
 
 /**
  * Class FiveCardDraw
@@ -59,6 +62,11 @@ class FiveCardDraw implements IGame, IEventListener
     protected $eventManager;
 
     /**
+     * @var ILogger
+     */
+    protected $logger;
+
+    /**
      * FiveCardDraw constructor.
      * @param IDeck $deck
      * @param IPlayerList $playerList
@@ -69,6 +77,7 @@ class FiveCardDraw implements IGame, IEventListener
         $this->deck = $deck;
         $this->playerList = $playerList;
         $this->eventManager = new EventManager();
+        $this->logger = new GameLogger();
         $this->initEventManager();
     }
 
@@ -91,11 +100,13 @@ class FiveCardDraw implements IGame, IEventListener
         /** @var EventManager $eventManager */
         $eventManager = $this->eventManager;
         $eventManager->registerListener($this);
+        $eventManager->registerListener($this->logger);
         /** @var IPlayer $player */
         foreach ($this->playerList->getPlayers() as $player) {
             $player->setEventManager($eventManager);
             $eventManager->registerListener($player);
         }
+        $eventManager->registerListener($this->playerList);
     }
 
     /**
@@ -120,6 +131,16 @@ class FiveCardDraw implements IGame, IEventListener
     public function getDeck(): IDeck
     {
         return $this->deck;
+    }
+
+    /**
+     * @param IDeck $deck
+     * @return $this
+     */
+    public function setDeck(IDeck $deck): IGame
+    {
+        $this->deck = $deck;
+        return $this;
     }
 
     /**
@@ -183,14 +204,18 @@ class FiveCardDraw implements IGame, IEventListener
     }
 
     /**
-     * @param PlayerEvent $event
+     * @param PlayerBetEvent $event
      */
-    public function onPlayerBet(PlayerEvent $event)
+    public function onPlayerBet(PlayerBetEvent $event)
     {
-        $this->incPot($event->getPlayer()->getCurrentBet());
+        $this->incPot($event->getBet());
     }
 
-    public function onPlayerWinPot(PlayerEvent $event)
+
+    /**
+     * @param PlayerWinPotEvent $event
+     */
+    public function onPlayerWinPot(PlayerWinPotEvent $event)
     {
         $this->pot = 0.0;
     }

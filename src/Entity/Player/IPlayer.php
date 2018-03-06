@@ -40,10 +40,10 @@ interface IPlayer
     public function getMoney(): float;
 
     /**
-     * @param int $amount
+     * @param float $amount
      * @return IPlayer
      */
-    public function incMoney(int $amount): IPlayer;
+    public function incMoney(float $amount): IPlayer;
 
     /**
      * @param float $amount

@@ -191,7 +191,7 @@ class HandAnalyserService
             if ($player->getTradeStatus() === IPlayer::TRADE_STATUS_FOLD) {
                 continue;
             }
-            if (is_null($winner) || $player->getHand()->getStrength() > $winner->getHand()->getStrength()) {
+            if (is_null($winner) || ($player->getHand()->getStrength() > $winner->getHand()->getStrength())) {
                 $winner = $player;
                 continue;
             }

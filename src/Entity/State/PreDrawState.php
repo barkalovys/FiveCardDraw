@@ -32,6 +32,11 @@ class PreDrawState implements IState
     {
         $game = $this->getGame();
         $playerList = $game->getPlayerList();
+        /** @var IPlayer $player */
+        array_map(function($player){
+            $player->removeCards();
+        }, $playerList->getPlayers());
+        $this->getGame()->setDeck((new \FiveCardDraw\Service\Deck\StandardDeckBuilder())->build());
         for ($i = 0; $i < 5; ++$i) {
             /** @var IPlayer $player */
             foreach ($playerList->getPlayers() as $player) {

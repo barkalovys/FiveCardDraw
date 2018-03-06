@@ -2,10 +2,9 @@
 
 namespace FiveCardDraw\Event;
 
-
 use FiveCardDraw\Entity\Player\IPlayer;
 
-class PlayerEvent implements IEvent
+class PlayerBetEvent implements IEvent
 {
 
     /**
@@ -14,11 +13,17 @@ class PlayerEvent implements IEvent
     protected $player;
 
     /**
+     * @var float
+     */
+    protected $bet;
+
+    /**
      * @param IPlayer $player
      */
-    public function __construct(IPlayer $player)
+    public function __construct(IPlayer $player, float $bet)
     {
         $this->player = $player;
+        $this->bet = $bet;
     }
 
     /**
@@ -27,6 +32,14 @@ class PlayerEvent implements IEvent
     public function getPlayer(): IPlayer
     {
         return $this->player;
+    }
+
+    /**
+     * @return float
+     */
+    public function getBet(): float
+    {
+        return $this->bet;
     }
 
 }

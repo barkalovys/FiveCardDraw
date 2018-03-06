@@ -1,12 +1,14 @@
 <?php
 
 namespace FiveCardDraw\Entity\Player;
+use FiveCardDraw\Event\Listener\IEventListener;
+use FiveCardDraw\Event\PlayerWinPotEvent;
 
 /**
  * Class PlayerList
  * @package Entity\Player
  */
-class PlayerList implements IPlayerList
+class PlayerList implements IPlayerList, IEventListener
 {
 
     /**
@@ -31,11 +33,24 @@ class PlayerList implements IPlayerList
     }
 
     /**
+     * @param PlayerWinPotEvent $event
+     */
+    public function onPlayerWinPot(PlayerWinPotEvent $event)
+    {
+        foreach ($this->players as $player) {
+            if ($player !== $event->getPlayer() && $player->getMoney() == 0) {
+                $this->detach($player);
+            }
+        }
+    }
+
+    /**
      * @param IPlayer $player
      */
     public function attach(IPlayer $player)
     {
         $this->players[$player->getId()] = $player;
+        $this->refreshPositions();
     }
 
     /**
@@ -44,6 +59,7 @@ class PlayerList implements IPlayerList
     public function detach(IPlayer $player)
     {
         unset($this->players[$player->getId()]);
+        $this->refreshPositions();
     }
 
     /**
@@ -61,6 +77,21 @@ class PlayerList implements IPlayerList
         return null;
     }
 
+    private function refreshPositions()
+    {
+        $i = 0;
+        /** @var IPlayer $player */
+        foreach ($this->getPlayers() as $player) {
+            $player->setPosition($i);
+            ++$i;
+        }
+    }
+
+    private function sortByPosition()
+    {
+
+    }
+
     /**
      * @return array
      */
@@ -68,6 +99,5 @@ class PlayerList implements IPlayerList
     {
         return $this->players;
     }
-
 
 }

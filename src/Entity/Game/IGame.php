@@ -35,6 +35,12 @@ interface IGame
     public function getDeck(): IDeck;
 
     /**
+     * @param IDeck $deck
+     * @return IGame
+     */
+    public function setDeck(IDeck $deck): IGame;
+
+    /**
      * @return int
      */
     public function getSmallBlindBet(): int;

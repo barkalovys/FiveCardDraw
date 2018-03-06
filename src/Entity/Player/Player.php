@@ -6,7 +6,8 @@ use FiveCardDraw\Entity\Hand\IHand;
 use FiveCardDraw\Event\Listener\IEventListener;
 use FiveCardDraw\Event\Manager\EventManager;
 use FiveCardDraw\Event\Manager\IEventManager;
-use FiveCardDraw\Event\PlayerEvent;
+use FiveCardDraw\Event\PlayerBetEvent;
+use FiveCardDraw\Event\PlayerWinPotEvent;
 
 
 /**
@@ -103,13 +104,13 @@ class Player implements IPlayer, IEventListener
         $this->setTradeStatus(IPlayer::TRADE_STATUS_BETTING);
         $this->money -= $amount;
         $this->currentBet += $amount;
-        $this->eventManager->notify('playerBet', new PlayerEvent($this));
+        $this->eventManager->notify('playerBet', new PlayerBetEvent($this, $amount));
     }
 
     /**
-     * @param PlayerEvent $event
+     * @param PlayerBetEvent $event
      */
-    public function onPlayerBet(PlayerEvent $event)
+    public function onPlayerBet(PlayerBetEvent $event)
     {
         $player = $event->getPlayer();
         if (
@@ -122,11 +123,14 @@ class Player implements IPlayer, IEventListener
     }
 
     /**
-     * @param PlayerEvent $event
+     * @param PlayerWinPotEvent $event
      */
-    public function onPlayerWinPot(PlayerEvent $event)
+    public function onPlayerWinPot(PlayerWinPotEvent $event)
     {
         $this->currentBet = 0.0;
+        if ($this === $event->getPlayer()) {
+            $this->incMoney($event->getPot());
+        }
         $this->setTradeStatus(IPlayer::TRADE_STATUS_WAITING);
     }
 
@@ -155,10 +159,10 @@ class Player implements IPlayer, IEventListener
     }
 
     /**
-     * @param int $amount
+     * @param float $amount
      * @return IPlayer
      */
-    public function incMoney(int $amount): IPlayer
+    public function incMoney(float $amount): IPlayer
     {
         $this->money += $amount;
         return $this;
@@ -206,6 +210,15 @@ class Player implements IPlayer, IEventListener
     public function addCard(ICard $card):IPlayer
     {
         $this->cards[] = $card;
+        return $this;
+    }
+
+    /**
+     * @return IPlayer
+     */
+    public function removeCards(): IPlayer
+    {
+        $this->cards = [];
         return $this;
     }
 
