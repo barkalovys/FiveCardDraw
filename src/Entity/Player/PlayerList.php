@@ -18,17 +18,13 @@ class PlayerList implements IPlayerList, IEventListener
 
     /**
      * PlayerList constructor.
-     * @param int $numPlayers
+     * @param array $players
      * @throws \Exception
      */
-    public function __construct(int $numPlayers)
+    public function __construct(array $players = [])
     {
-        if ($numPlayers < 1 || $numPlayers > 10) {
-            throw new \Exception("Players number must be between 0 and 10, {$numPlayers} given");
-        }
-
-        for ($i = 1; $i <= $numPlayers; ++$i) {
-            $this->attach(new Player('Player_' . $i, rand(100, 500), $i-1), $i);
+        for ($i = 0; $i < count($players); ++$i) {
+            $this->attach(new Player($players[$i], rand(100, 500), $i));
         }
     }
 
@@ -43,6 +39,8 @@ class PlayerList implements IPlayerList, IEventListener
             }
         }
         $this->refreshPositions();
+        $this->movePosition();
+        $this->sortByPosition();
     }
 
     /**
@@ -76,6 +74,16 @@ class PlayerList implements IPlayerList, IEventListener
         return null;
     }
 
+    public function movePosition()
+    {
+        /** @var IPlayer $player */
+        foreach ($this->players as $player){
+            $position = $player->getPosition();
+            $newPosition = $position === (count($this->players) - 1) ? 0 : $position + 1;
+            $player->setPosition($newPosition);
+        }
+    }
+
     private function refreshPositions()
     {
         $i = 0;
@@ -84,6 +92,22 @@ class PlayerList implements IPlayerList, IEventListener
             $player->setPosition($i);
             ++$i;
         }
+    }
+
+    private function sortByPosition()
+    {
+        /** Sort hand by rank */
+        uasort(
+            $this->players,
+            /**@var IPlayer $p1 */
+            /**@var IPlayer $p2 */
+            function($p1, $p2) {
+                if ($p1->getPosition() === $p2->getPosition()) {
+                    return 0;
+                }
+                return $p1->getPosition() > $p2->getPosition() ? 1 : -1;
+            }
+        );
     }
 
     /**

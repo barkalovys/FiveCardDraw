@@ -27,6 +27,8 @@ class FiveCardDraw implements IGame, IEventListener
 
     const MAX_CARDS_IN_HAND = 5;
 
+    const MAX_PLAYERS = 10;
+
     /**
      * @var IDeck
      */
@@ -74,6 +76,9 @@ class FiveCardDraw implements IGame, IEventListener
      */
     public function __construct(IDeck $deck, IPlayerList $playerList)
     {
+        if (count($playerList->getPlayers()) > self::MAX_PLAYERS) {
+            throw new \InvalidArgumentException('Maximum ' . self::MAX_PLAYERS . ' players limit exceeded');
+        }
         $this->state = new PreDrawState($this);
         $this->deck = $deck;
         $this->playerList = $playerList;
