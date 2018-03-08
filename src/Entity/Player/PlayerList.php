@@ -2,7 +2,7 @@
 
 namespace FiveCardDraw\Entity\Player;
 use FiveCardDraw\Event\Listener\IEventListener;
-use FiveCardDraw\Event\PlayerWinPotEvent;
+use FiveCardDraw\Event\PlayerWinRoundEvent;
 
 /**
  * Class PlayerList
@@ -28,16 +28,12 @@ class PlayerList implements IPlayerList, IEventListener
         }
     }
 
+
     /**
-     * @param PlayerWinPotEvent $event
+     * @param PlayerWinRoundEvent $event
      */
-    public function onPlayerWinPot(PlayerWinPotEvent $event)
+    public function onPlayerWinRound(PlayerWinRoundEvent $event)
     {
-        foreach ($this->players as $player) {
-            if ($player !== $event->getPlayer() && $player->getMoney() == 0) {
-                $this->detach($player);
-            }
-        }
         $this->refreshPositions();
         $this->movePosition();
         $this->sortByPosition();

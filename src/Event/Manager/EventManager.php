@@ -14,14 +14,14 @@ class EventManager implements IEventManager
 {
 
     /**
-     * @var \SplObjectStorage
+     * @var array
      */
     private $listeners;
 
 
     public function __construct()
     {
-        $this->listeners = new \SplObjectStorage();
+        $this->listeners = [];
     }
 
 
@@ -48,7 +48,7 @@ class EventManager implements IEventManager
      */
     public function registerListener(IEventListener $listener)
     {
-        $this->listeners->attach($listener);
+        $this->listeners[spl_object_hash($listener)] = $listener;
     }
 
     /**
@@ -56,7 +56,7 @@ class EventManager implements IEventManager
      */
     public function detachListener(IEventListener $listener)
     {
-        $this->listeners->detach($listener);
+        unset($this->listeners[spl_object_hash($listener)]);
     }
 
 }

@@ -5,7 +5,7 @@ namespace FiveCardDraw\Entity\State;
 use FiveCardDraw\Entity\Game\IGame;
 use FiveCardDraw\Entity\Player\IPlayer;
 use FiveCardDraw\Entity\Player\IPlayerList;
-use FiveCardDraw\Event\PlayerWinPotEvent;
+use FiveCardDraw\Event\PlayerWinRoundEvent;
 use FiveCardDraw\Service\HandAnalyser\HandAnalyserService;
 
 class PostDrawState implements IState
@@ -38,9 +38,7 @@ class PostDrawState implements IState
         }
         //TODO: implement multiple winners case
         $winner = $service->getPlayersWithStrongestHand($playerList);
-        //TODO: hide all money logic inside listeners
-        $pot = $this->getGame()->getPot();
-        $this->getGame()->getEventManager()->notify('playerWinPot', new PlayerWinPotEvent($winner, $pot));
+        $this->getGame()->getEventManager()->notify('playerWinRound', new PlayerWinRoundEvent($winner));
         if (count($playerList->getPlayers()) <= 1) {
             $this->getGame()->setWinner($winner);
             return;

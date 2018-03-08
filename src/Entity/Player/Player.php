@@ -123,18 +123,6 @@ class Player implements IPlayer, IEventListener
     }
 
     /**
-     * @param PlayerWinPotEvent $event
-     */
-    public function onPlayerWinPot(PlayerWinPotEvent $event)
-    {
-        $this->currentBet = 0.0;
-        if ($this === $event->getPlayer()) {
-            $this->incMoney($event->getPot());
-        }
-        $this->setTradeStatus(IPlayer::TRADE_STATUS_WAITING);
-    }
-
-    /**
      * @return string
      */
     public function getId(): string
@@ -165,6 +153,7 @@ class Player implements IPlayer, IEventListener
     public function incMoney(float $amount): IPlayer
     {
         $this->money += $amount;
+        $this->getEventManager()->notify('playerWinPot', new PlayerWinPotEvent($this, $amount));
         return $this;
     }
 
@@ -176,6 +165,14 @@ class Player implements IPlayer, IEventListener
         return $this->currentBet;
     }
 
+    /**
+     * @return IPlayer
+     */
+    public function clearCurrentBet(): IPlayer
+    {
+        $this->currentBet = 0.0;
+        return $this;
+    }
 
     /**
      * @return IHand

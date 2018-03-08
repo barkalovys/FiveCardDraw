@@ -13,7 +13,7 @@ use FiveCardDraw\Event\Manager\EventManager;
 use FiveCardDraw\Event\Manager\IEventManager;
 use FiveCardDraw\Event\PlayerBetEvent;
 use FiveCardDraw\Event\PlayerWinGameEvent;
-use FiveCardDraw\Event\PlayerWinPotEvent;
+use FiveCardDraw\Event\PlayerWinRoundEvent;
 use FiveCardDraw\Service\Deck\IDeckBuilder;
 use FiveCardDraw\Service\Logger\GameLogger;
 use FiveCardDraw\Service\Logger\ILogger;
@@ -213,10 +213,32 @@ class FiveCardDraw implements IGame, IEventListener
 
 
     /**
-     * @param PlayerWinPotEvent $event
+     * @param PlayerWinRoundEvent $event
      */
-    public function onPlayerWinPot(PlayerWinPotEvent $event)
+    public function onPlayerWinRound(PlayerWinRoundEvent $event)
     {
+        $winnerBet = $event->getPlayer()->getCurrentBet();
+        $winMoney = $winnerBet;
+        /** @var IPLayer $player */
+        foreach($this->getPlayerList()->getPlayers() as $player) {
+            $player->setTradeStatus(IPlayer::TRADE_STATUS_WAITING);
+            if ($player === $event->getPlayer()) {
+                $player->clearCurrentBet();
+                continue;
+            }
+            $playerBet = $player->getCurrentBet();
+            if ($winnerBet < $playerBet) {
+                $winMoney += $winnerBet;
+                $player->incMoney($playerBet - $winnerBet);
+            } else {
+                if (!$player->getMoney()) {
+                    $this->getPlayerList()->detach($player);
+                }
+                $winMoney += $playerBet;
+            }
+            $player->clearCurrentBet();
+        }
+        $event->getPlayer()->incMoney($winMoney);
         $this->pot = 0.0;
     }
 

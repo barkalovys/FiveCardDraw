@@ -6,6 +6,7 @@ use FiveCardDraw\Event\Listener\IEventListener;
 use FiveCardDraw\Event\PlayerBetEvent;
 use FiveCardDraw\Event\PlayerWinGameEvent;
 use FiveCardDraw\Event\PlayerWinPotEvent;
+use FiveCardDraw\Event\PlayerWinRoundEvent;
 
 /**
  * Class GameLogger
@@ -27,7 +28,15 @@ class GameLogger implements ILogger, IEventListener
      */
     public function onPlayerWinPot(PlayerWinPotEvent $event)
     {
-        $this->log("{$event->getPlayer()->getName()} wins pot {$event->getPot()}$ with hand: {$event->getPlayer()->getHand()}");
+        $this->log("{$event->getPlayer()->getName()} wins pot {$event->getPot()}$");
+    }
+
+    /**
+     * @param PlayerWinRoundEvent $event
+     */
+    public function onPlayerWinRound(PlayerWinRoundEvent $event)
+    {
+        $this->log("{$event->getPlayer()->getName()} wins round with hand: {$event->getPlayer()->getHand()}");
         $this->log(PHP_EOL);
     }
 
