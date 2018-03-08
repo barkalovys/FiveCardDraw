@@ -20,4 +20,9 @@ interface IEventManager
      * @param IEventListener $listener
      */
     public function registerListener(IEventListener $listener);
+
+    /**
+     * @param IEventListener $listener
+     */
+    public function detachListener(IEventListener $listener);
 }

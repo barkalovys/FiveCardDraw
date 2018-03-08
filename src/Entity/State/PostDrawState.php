@@ -27,8 +27,9 @@ class PostDrawState implements IState
         $service = new HandAnalyserService();
         /** @var IPlayer $player */
         foreach ($playerList->getPlayers() as $player) {
-            $bet = $player->getMoney() > 15 ? rand(1, (int)$player->getMoney()) : $player->getMoney();
-            $player->bet($bet);
+            if ($player->isFolded()) {
+                continue;
+            }
             $player->setHand(
                 $service->getHand(
                     $player->getCards()

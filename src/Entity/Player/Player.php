@@ -287,4 +287,11 @@ class Player implements IPlayer, IEventListener
         return $this;
     }
 
+    /**
+     * @return bool
+     */
+    public function isFolded(): bool
+    {
+        return $this->tradeStatus === self::TRADE_STATUS_FOLD;
+    }
 }

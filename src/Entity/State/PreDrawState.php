@@ -26,7 +26,7 @@ class PreDrawState implements IState
     }
 
     /**
-     * Give cards to each player and post blinds
+     * Give cards to each player
      */
     public function play()
     {
@@ -36,8 +36,6 @@ class PreDrawState implements IState
         array_map(function($player){
             $player->removeCards();
         }, $playerList->getPlayers());
-        $playerList->getByPosition(0)->bet($game->getSmallBlindBet());
-        $playerList->getByPosition(1)->bet(2 * $game->getSmallBlindBet());
         $this->getGame()->setDeck((new \FiveCardDraw\Service\Deck\StandardDeckBuilder())->build());
         for ($i = 0; $i < 5; ++$i) {
             /** @var IPlayer $player */

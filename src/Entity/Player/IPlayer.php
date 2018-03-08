@@ -110,4 +110,10 @@ interface IPlayer
      * @return IPlayer
      */
     public function setEventManager(IEventManager $eventManager): IPlayer;
+
+    /**
+     * @return bool
+     */
+    public function isFolded(): bool;
+
 }
