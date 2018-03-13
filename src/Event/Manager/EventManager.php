@@ -16,13 +16,7 @@ class EventManager implements IEventManager
     /**
      * @var array
      */
-    private $listeners;
-
-
-    public function __construct()
-    {
-        $this->listeners = [];
-    }
+    private $listeners = [];
 
 
     /**
@@ -36,7 +30,6 @@ class EventManager implements IEventManager
         /** @var IEventListener $listener */
         foreach ($this->listeners as $listener) {
             if (!method_exists($listener, $method)) {
-                //throw new \Exception('Class ' . get_class($listener) . ' need to implement method ' . $method);
                 continue;
             }
             call_user_func([$listener, $method], $event);
