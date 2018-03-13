@@ -8,6 +8,9 @@ use FiveCardDraw\Event\Manager\EventManager;
 use FiveCardDraw\Event\Manager\IEventManager;
 use FiveCardDraw\Event\PlayerBetEvent;
 use FiveCardDraw\Event\PlayerWinPotEvent;
+use FiveCardDraw\Service\UserInput\BotUserInputService;
+use FiveCardDraw\Service\UserInput\CliUserInputService;
+use FiveCardDraw\Service\UserInput\AbstractUserInputService;
 
 
 /**
@@ -47,6 +50,11 @@ class Player implements IPlayer, IEventListener
     protected $position;
 
     /**
+     * @var bool
+     */
+    protected $isBot;
+
+    /**
      * @var float
      */
     protected $currentBet = 0.0;
@@ -72,12 +80,18 @@ class Player implements IPlayer, IEventListener
     protected $eventManager;
 
     /**
+     * @var AbstractUserInputService
+     */
+    protected $userInput;
+
+    /**
      * Player constructor.
      * @param string $name
      * @param float $money
      * @param int $position
+     * @param bool $isBot
      */
-    public function __construct(string $name, float $money, int $position)
+    public function __construct(string $name, float $money, int $position, bool $isBot = true)
     {
         $this->id = uniqid();
         $this->name = $name;
@@ -85,6 +99,8 @@ class Player implements IPlayer, IEventListener
         $this->cards = [];
         $this->tradeStatus = self::TRADE_STATUS_INITIAL;
         $this->position = $position;
+        $this->isBot = $isBot;
+        $this->userInput = $isBot ? BotUserInputService::getInstance() : CliUserInputService::getInstance();
     }
 
     /**
@@ -290,5 +306,13 @@ class Player implements IPlayer, IEventListener
     public function isFolded(): bool
     {
         return $this->tradeStatus === self::TRADE_STATUS_FOLD;
+    }
+
+    /**
+     * @return AbstractUserInputService
+     */
+    public function getUserInput(): AbstractUserInputService
+    {
+        return $this->userInput;
     }
 }

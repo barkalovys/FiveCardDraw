@@ -24,7 +24,7 @@ class PlayerList implements IPlayerList, IEventListener
     public function __construct(array $players = [])
     {
         for ($i = 0; $i < count($players); ++$i) {
-            $this->attach(new Player($players[$i], rand(100, 500), $i));
+            $this->attach(new Player($players[$i], rand(100, 500), $i, $i !== 0));
         }
     }
 

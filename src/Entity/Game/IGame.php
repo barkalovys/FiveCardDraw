@@ -7,6 +7,7 @@ use FiveCardDraw\Entity\Deck\IDeck;
 use FiveCardDraw\Entity\Player\IPlayerList;
 use FiveCardDraw\Entity\State\IState;
 use FiveCardDraw\Event\Manager\IEventManager;
+use FiveCardDraw\Service\Logger\ILogger;
 
 /**
  * Interface IGame
@@ -66,4 +67,9 @@ interface IGame
      * @return IEventManager
      */
     public function getEventManager(): IEventManager;
+
+    /**
+     * @return ILogger
+     */
+    public function getLogger(): ILogger;
 }

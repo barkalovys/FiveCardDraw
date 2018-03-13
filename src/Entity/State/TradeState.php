@@ -60,15 +60,7 @@ class TradeState implements IState, IEventListener
                 if (!$player->getMoney() || $player->isFolded()) {
                     continue;
                 }
-
-                //todo: take betting logic to respective class
-                if ($this->maxStake && $player->getMoney() > $this->maxStake && rand(0, 4)) {
-                    //call
-                    $bet = $player->getMoney() - $this->maxStake > 15 ? rand(15, $player->getMoney()) : $player->getMoney();
-                } else {
-                    //raise
-                    $bet = $player->getMoney() > 15 ? rand(2 * $game->getSmallBlindBet(), (int)$player->getMoney()) : $player->getMoney();
-                }
+                $bet = $player->getUserInput()->inputBet($player, $this);
                 $player->bet($bet);
             }
             $firstRound = false;
@@ -100,6 +92,14 @@ class TradeState implements IState, IEventListener
     public function getGame(): IGame
     {
         return $this->game;
+    }
+
+    /**
+     * @return float
+     */
+    public function getMaxStake(): float
+    {
+        return $this->maxStake;
     }
 
 }

@@ -250,5 +250,12 @@ class FiveCardDraw implements IGame, IEventListener
         return $this->eventManager;
     }
 
+    /**
+     * @return ILogger
+     */
+    public function getLogger(): ILogger
+    {
+        return $this->logger;
+    }
 
 }

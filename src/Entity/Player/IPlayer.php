@@ -4,7 +4,7 @@ namespace FiveCardDraw\Entity\Player;
 
 use FiveCardDraw\Entity\Card\ICard;
 use FiveCardDraw\Entity\Hand\IHand;
-use FiveCardDraw\Event\Manager\EventManager;
+use FiveCardDraw\Service\UserInput\AbstractUserInputService;
 use FiveCardDraw\Event\Manager\IEventManager;
 
 /**
@@ -116,4 +116,8 @@ interface IPlayer
      */
     public function isFolded(): bool;
 
+    /**
+     * @return AbstractUserInputService
+     */
+    public function getUserInput(): AbstractUserInputService;
 }
